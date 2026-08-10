@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Fraction Quiz</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle, #f8fafc 0%, #e2e8f0 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Custom scrollbar for active screen content */
+        .scrollable-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .scrollable-content::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .scrollable-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        /* Vertical Fraction Formatting */
+        .fraction-display {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            align-items: center;
+            line-height: 1.1;
+            padding: 0 4px;
+            font-weight: 700;
+        }
+        .fraction-num {
+            border-bottom: 2px solid currentColor;
+            padding-bottom: 2px;
+            font-weight: 700;
+        }
+        .fraction-den {
+            padding-top: 2px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="p-2 md:p-4">
+
+<div id="quiz-container" class="w-full max-w-2xl h-[95vh] max-h-[680px] bg-white rounded-2xl shadow-xl flex flex-col overflow-hidden border border-slate-200 mx-auto my-auto">
+    
+    <!-- Header Area -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 px-4 flex items-center justify-between shadow-sm z-20 flex-shrink-0">
+        <div class="flex items-center gap-2">
+            <span class="text-lg">✏️</span>
+            <span class="text-base font-bold tracking-wide">Fraction Quiz</span>
+        </div>
+        <div class="flex-1 max-w-xs mx-4">
+            <div class="w-full bg-white/20 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
+                <div id="progressBar" class="bg-yellow-300 h-full rounded-full transition-all duration-300" style="width: 0%;"></div>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <span id="questionCounter" class="bg-black/20 px-2.5 py-0.5 rounded-full text-xs font-bold tracking-wider">1/30</span>
+        </div>
+    </div>
+
+    <!-- Main Content Slide Area -->
+    <div id="contentArea" class="scrollable-content flex-1 overflow-y-auto bg-slate-50/50 p-4 flex flex-col justify-between">
+        
+        <!-- Start Screen -->
+        <div id="startScreen" class="flex flex-col items-center justify-center text-center py-6 my-auto w-full">
+            <span class="text-5xl mb-3 animate-bounce">🎯</span>
+            <h1 class="text-2xl font-bold text-slate-800 leading-tight">Fraction Mastery Challenge</h1>
+            <p class="text-slate-600 text-sm max-w-md mt-2 mb-6 mx-auto">Sharpen your math skills by completing 30 interactive, fun, and engaging fraction quiz questions!</p>
+            
+            <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl text-left text-xs text-slate-700 space-y-2 max-w-sm mb-6 mx-auto shadow-sm">
+                <p class="font-bold text-blue-900">📋 Quiz Instructions:</p>
+                <p class="flex items-start gap-1"><span>•</span> <span>Contains 30 sequential multiple-choice questions.</span></p>
+                <p class="flex items-start gap-1"><span>•</span> <span>Answer choices are automatically randomized for each question.</span></p>
+                <p class="flex items-start gap-1"><span>•</span> <span>Receive immediate feedback and step-by-step explanations.</span></p>
+                <p class="flex items-start gap-1"><span>•</span> <span>Includes interactive visual fraction diagrams and models.</span></p>
+            </div>
+
+            <button onclick="startQuiz()" class="px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl shadow-lg transition-transform hover:scale-105 active:scale-95 text-sm mx-auto">
+                Start Quiz Now 🚀
+            </button>
+        </div>
+
+        <!-- Quiz Screen (Hidden by default) -->
+        <div id="quizScreen" class="hidden flex-col items-center w-full my-auto text-center justify-center">
+            <!-- Question Badge and Text -->
+            <div class="w-full text-center">
+                <span id="questionCategory" class="inline-block bg-blue-100 text-blue-800 font-bold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider mb-2">Basic Concepts</span>
+                <h2 id="questionText" class="text-sm md:text-base font-bold text-slate-800 leading-snug px-2">Question will appear here...</h2>
+            </div>
+
+            <!-- SVG Illustration Container -->
+            <div id="svgContainer" class="my-4 flex items-center justify-center min-h-[90px] w-full">
+                <!-- SVGs will be injected here dynamically -->
+            </div>
+
+            <!-- Options Grid -->
+            <div id="optionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-md mt-2 mx-auto">
+                <!-- Answer buttons will be injected here dynamically -->
+            </div>
+
+            <!-- Explanation Box -->
+            <div id="explanationBox" class="hidden mt-4 bg-white border border-slate-200 p-3 rounded-xl shadow-inner max-w-md w-full text-left mx-auto">
+                <p class="font-bold text-xs mb-1" id="explanationTitle">Explanation:</p>
+                <p class="text-slate-600 text-xs leading-relaxed" id="explanationText">Answer rationale will appear here...</p>
+            </div>
+        </div>
+
+        <!-- Score Summary Screen (Hidden by default) -->
+        <div id="summaryScreen" class="hidden flex-col items-center justify-center text-center py-6 my-auto w-full">
+            <span id="summaryEmoji" class="text-5xl mb-2">🏆</span>
+            <h2 id="summaryBadge" class="text-xl font-bold text-emerald-600">Outstanding! Perfect Score!</h2>
+            <p class="text-slate-500 text-xs mt-1">You have successfully completed all 30 fraction quiz questions.</p>
+
+            <div class="flex items-center gap-6 my-5 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm mx-auto">
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Correct</p>
+                    <p id="summaryCorrect" class="text-2xl font-bold text-green-500">0</p>
+                </div>
+                <div class="w-px h-10 bg-slate-200"></div>
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 font-bold uppercase">Final Score</p>
+                    <p id="summaryScore" class="text-3xl font-bold text-indigo-600">0</p>
+                </div>
+            </div>
+
+            <button onclick="restartQuiz()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-md transition-all hover:scale-105 text-xs mx-auto">
+                Try Quiz Again 🔄
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Footer Controller Area -->
+    <div class="bg-slate-100 border-t border-slate-200 py-2.5 px-4 flex items-center justify-between z-10 flex-shrink-0">
+        <div class="text-xs text-slate-500 font-semibold" id="scoreTracker">
+            Score: <span id="currentScore" class="text-indigo-600 font-bold">0</span>/30
+        </div>
+        <button id="btnNext" disabled onclick="nextQuestion()" class="px-5 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed">
+            Next Question ➡️
+        </button>
+    </div>
+
+</div>
+
+<script>
+    // Audio Synthesis Setup
+    let audioCtx = null;
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+    function playBeep(type) {
+        initAudio();
+        if (!audioCtx) return;
+        try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                osc.frequency.setValueAtTime(147, audioCtx.currentTime + 0.12); // D3
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.35);
+            } else if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            }
+        } catch (e) {
+            console.log('Audio Context Error:', e);
+        }
+    }
+
+    // Helper to shuffle an array (Fisher-Yates)
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    const questions = [
+        {
+            category: "Basic Concepts",
+            question: "What is a fraction in mathematics?",
+            options: [
+                { text: "An equal part of a whole object", isCorrect: true },
+                { text: "A very large whole number", isCorrect: false },
+                { text: "A broken piece of solid glass", isCorrect: false },
+                { text: "The sum of multiple whole numbers", isCorrect: false }
+            ],
+            explanation: "A fraction represents one or more equal parts (fair shares) of a single whole object or group.",
+            svg: null
+        },
+        {
+            category: "Fraction Structure",
+            question: "In a fraction, the number located on TOP is called the...",
+            options: [
+                { text: "Numerator", isCorrect: true },
+                { text: "Denominator", isCorrect: false },
+                { text: "Remainder", isCorrect: false },
+                { text: "Quotient", isCorrect: false }
+            ],
+            explanation: "The numerator sits above the fraction bar and indicates how many equal parts are selected or shaded.",
+            svg: `<div class="bg-white p-2.5 rounded-lg border border-slate-200 text-base font-bold shadow-sm"><span class="text-blue-600 font-extrabold">Top</span><div class="h-0.5 bg-slate-800 w-32 my-1 mx-auto"></div>Bottom</div>`
+        },
+        {
+            category: "Fraction Structure",
+            question: "In a fraction, the number located on BOTTOM is called the...",
+            options: [
+                { text: "Denominator", isCorrect: true },
+                { text: "Numerator", isCorrect: false },
+                { text: "Factor", isCorrect: false },
+                { text: "Divisor", isCorrect: false }
+            ],
+            explanation: "The denominator sits below the fraction bar and represents the total number of equal parts in one whole.",
+            svg: `<div class="bg-white p-2.5 rounded-lg border border-slate-200 text-base font-bold shadow-sm">Top<div class="h-0.5 bg-slate-800 w-32 my-1 mx-auto"></div><span class="text-indigo-600 font-extrabold">Bottom</span></div>`
+        },
+        {
+            category: "Equal Shares",
+            question: "If a melon is sliced into 3 unequal pieces, is each piece worth one-third?",
+            options: [
+                { text: "No, because the slices are not equal in size", isCorrect: true },
+                { text: "Yes, because there are 3 total slices", isCorrect: false },
+                { text: "Yes, if the melon is sweet", isCorrect: false },
+                { text: "No, because it must be cut into 4 slices", isCorrect: false }
+            ],
+            explanation: "Fractions are only valid when every piece is cut into equal sizes (fair shares).",
+            svg: null
+        },
+        {
+            category: "Fraction Structure",
+            question: "The denominator of a fraction tells us...",
+            options: [
+                { text: "The total number of equal parts that form one whole", isCorrect: true },
+                { text: "The number of parts taken or shaded", isCorrect: false },
+                { text: "The product of multiplying two numbers", isCorrect: false },
+                { text: "How many friends are sharing a cake", isCorrect: false }
+            ],
+            explanation: "The denominator shows into how many equal pieces a whole object has been divided.",
+            svg: null
+        },
+        {
+            category: "Fraction Structure",
+            question: "The numerator of a fraction tells us...",
+            options: [
+                { text: "How many equal parts are selected or shaded", isCorrect: true },
+                { text: "The total number of parts in the whole", isCorrect: false },
+                { text: "The thickness of a slice of cake", isCorrect: false },
+                { text: "The number of leftover slices", isCorrect: false }
+            ],
+            explanation: "The numerator tells us how many parts out of the total equal parts we are counting.",
+            svg: null
+        },
+        {
+            category: "Visual Models",
+            question: "What fraction represents the shaded region of this circle?",
+            options: [
+                { text: "1/2", isCorrect: true, isFraction: true },
+                { text: "1/3", isCorrect: false, isFraction: true },
+                { text: "2/2", isCorrect: false, isFraction: true },
+                { text: "1/4", isCorrect: false, isFraction: true }
+            ],
+            explanation: "The circle is split into 2 equal parts, and 1 part is shaded blue.",
+            svg: `<svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#e2e8f0" stroke="#1e293b" stroke-width="3"/><path d="M50 10 A40 40 0 0 1 50 90 Z" fill="#3b82f6"/><line x1="50" y1="10" x2="50" y2="90" stroke="#1e293b" stroke-width="3"/></svg>`
+        },
+        {
+            category: "Visual Models",
+            question: "Leo ate 1 slice from this pizza. What fraction of the pizza did he eat?",
+            options: [
+                { text: "1/4", isCorrect: true, isFraction: true },
+                { text: "1/2", isCorrect: false, isFraction: true },
+                { text: "3/4", isCorrect: false, isFraction: true },
+                { text: "1/3", isCorrect: false, isFraction: true }
+            ],
+            explanation: "The pizza is divided into 4 equal slices, and Leo ate 1 of those slices.",
+            svg: `<svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#e2e8f0" stroke="#1e293b" stroke-width="3"/><path d="M50 50 L50 10 A40 40 0 0 1 90 50 Z" fill="#3b82f6"/><line x1="50" y1="10" x2="50" y2="90" stroke="#1e293b" stroke-width="2"/><line x1="10" y1="50" x2="90" y2="50" stroke="#1e293b" stroke-width="2"/></svg>`
+        },
+        {
+            category: "Visual Models",
+            question: "What fraction is represented by the shaded part of this strip?",
+            options: [
+                { text: "2/3", isCorrect: true, isFraction: true },
+                { text: "1/3", isCorrect: false, isFraction: true },
+                { text: "3/3", isCorrect: false, isFraction: true },
+                { text: "2/4", isCorrect: false, isFraction: true }
+            ],
+            explanation: "There are 3 total equal square segments, and 2 of them are shaded blue.",
+            svg: `<svg width="150" height="40" viewBox="0 0 150 40"><rect x="5" y="5" width="140" height="30" fill="#e2e8f0" stroke="#1e293b" stroke-width="2"/><rect x="5" y="5" width="93.3" height="30" fill="#3b82f6"/><line x1="51.6" y1="5" x2="51.6" y2="35" stroke="#1e293b" stroke-width="2"/><line x1="98.3" y1="5" x2="98.3" y2="35" stroke="#1e293b" stroke-width="2"/></svg>`
+        },
+        {
+            category: "Visual Models",
+            question: "What is the fraction for the shaded blue region in this circle?",
+            options: [
+                { text: "3/4", isCorrect: true, isFraction: true },
+                { text: "1/4", isCorrect: false, isFraction: true },
+                { text: "2/4", isCorrect: false, isFraction: true },
+                { text: "4/4", isCorrect: false, isFraction: true }
+            ],
+            explanation: "The circle is divided into 4 equal sections, and 3 sections are shaded blue.",
+            svg: `<svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#e2e8f0" stroke="#1e293b" stroke-width="2"/><path d="M50 50 L50 10 A40 40 0 1 1 10 50 Z" fill="#3b82f6"/><line x1="50" y1="10" x2="50" y2="90" stroke="#1e293b" stroke-width="2"/><line x1="10" y1="50" x2="90" y2="50" stroke="#1e293b" stroke-width="2"/></svg>`
+        },
+        {
+            category: "Visual Models",
+            question: "What fraction is shown by this 5-segment tape diagram?",
+            options: [
+                { text: "3/5", isCorrect: true, isFraction: true },
+                { text: "2/5", isCorrect: false, isFraction: true },
+                { text: "4/5", isCorrect: false, isFraction: true },
+                { text: "3/2", isCorrect: false, isFraction: true }
+            ],
+            explanation: "The tape is divided into 5 equal parts, and 3 parts are shaded blue.",
+            svg: `<svg width="150" height="40" viewBox="0 0 150 40"><rect x="5" y="5" width="140" height="30" fill="#e2e8f0" stroke="#1e293b" stroke-width="2"/><rect x="5" y="5" width="84" height="30" fill="#3b82f6"/><line x1="33" y1="5" x2="33" y2="35" stroke="#1e293b"/><line x1="61" y1="5" x2="61" y2="35" stroke="#1e293b"/><line x1="89" y1="5" x2="89" y2="35" stroke="#1e293b"/><line x1="117" y1="5" x2="117" y2="35" stroke="#1e293b"/></svg>`
+        },
+        {
+            category: "Visual Models",
+            question: "A chocolate bar has 6 equal pieces. Sam ate 2 pieces. What fraction did he eat?",
+            options: [
+                { text: "2/6", isCorrect: true, isFraction: true },
+                { text: "1/6", isCorrect: false, isFraction: true },
+                { text: "3/6", isCorrect: false, isFraction: true },
+                { text: "4/6", isCorrect: false, isFraction: true }
+            ],
+            explanation: "2 pieces eaten out of 6 equal total pieces equals 2/6.",
+            svg: `<svg width="150" height="40" viewBox="0 0 150 40"><rect x="5" y="5" width="140" height="30" fill="#e2e8f0" stroke="#1e293b" stroke-width="2"/><rect x="5" y="5" width="46.6" height="30" fill="#3b82f6"/><line x1="28.3" y1="5" x2="28.3" y2="35" stroke="#1e293b"/><line x1="51.6" y1="5" x2="51.6" y2="35" stroke="#1e293b"/><line x1="75" y1="5" x2="75" y2="35" stroke="#1e293b"/><line x1="98.3" y1="5" x2="98.3" y2="35" stroke="#1e293b"/><line x1="121.6" y1="5" x2="121.6" y2="35" stroke="#1e293b"/></svg>`
+        },
+        {
+            category: "Equivalent Fractions",
+            question: "Which fraction is equivalent (equal in value) to 1/2?",
+            options: [
+                { text: "2/4", isCorrect: true, isFraction: true },
+                { text: "1/3", isCorrect: false, isFraction: true },
+                { text: "3/4", isCorrect: false, isFraction: true },
+                { text: "2/3", isCorrect: false, isFraction: true }
+            ],
+            explanation: "Multiplying top and bottom of 1/2 by 2 gives 2/4. Both cover exactly half of a whole!",
+            svg: null
+        },
+        {
+            category: "Equivalent Fractions",
+            question: "Which fraction has the exact same value as 2/6?",
+            options: [
+                { text: "1/3", isCorrect: true, isFraction: true },
+                { text: "1/2", isCorrect: false, isFraction: true },
+                { text: "2/3", isCorrect: false, isFraction: true },
+                { text: "3/6", isCorrect: false, isFraction: true }
+            ],
+            explanation: "Dividing both numerator (2) and denominator (6) by 2 gives 1/3.",
+            svg: null
+        },
+        {
+            category: "Comparing Fractions",
+            question: "When two fractions have the SAME denominator, which one is larger?",
+            options: [
+                { text: "The fraction with the larger numerator", isCorrect: true },
+                { text: "The fraction with the smaller numerator", isCorrect: false },
+                { text: "Both fractions are always equal", isCorrect: false },
+                { text: "The fraction with smaller total value", isCorrect: false }
+            ],
+            explanation: "When slice sizes are identical (same denominator), having more slices (larger numerator) means a larger amount.",
+            svg: null
+        },
+        {
+            category: "Comparing Fractions",
+            question: "Compare: 3/8 ... 5/8. Which symbol fills the blank correctly?",
+            options: [
+                { text: "<", isCorrect: true },
+                { text: ">", isCorrect: false },
+                { text: "=", isCorrect: false },
+                { text: "+", isCorrect: false }
+            ],
+            explanation: "Since denominators are equal (8), we compare numerators: 3 is less than 5, so 3/8 < 5/8.",
+            svg: null
+        },
+        {
+            category: "Comparing Fractions",
+            question: "When two fractions have the SAME numerator (top number), which one is larger?",
+            options: [
+                { text: "The fraction with the smaller denominator", isCorrect: true },
+                { text: "The fraction with the larger denominator", isCorrect: false },
+                { text: "The fraction with the higher bottom number", isCorrect: false },
+                { text: "They are always equal", isCorrect: false }
+            ],
+            explanation: "A smaller denominator means the whole object was divided into fewer, BIGGER pieces!",
+            svg: null
+        },
+        {
+            category: "Comparing Fractions",
+            question: "Compare: 1/3 ... 1/5. Which symbol is correct?",
+            options: [
+                { text: ">", isCorrect: true },
+                { text: "<", isCorrect: false },
+                { text: "=", isCorrect: false },
+                { text: "-", isCorrect: false }
+            ],
+            explanation: "1 slice out of 3 equal cuts is larger than 1 slice out of 5 equal cuts (1/3 > 1/5).",
+            svg: null
+        },
+        {
+            category: "Comparing Fractions",
+            question: "Which fraction is GREATER: 4/7 or 2/7?",
+            options: [
+                { text: "4/7", isCorrect: true, isFraction: true },
+                { text: "2/7", isCorrect: false, isFraction: true },
+                { text: "They are equal", isCorrect: false },
+                { text: "Cannot be compared", isCorrect: false }
+            ],
+            explanation: "Both have a denominator of 7. 4 pieces is greater than 2 pieces, so 4/7 > 2/7.",
+            svg: null
+        },
+        {
+            category: "Word Problems",
+            question: "Sarah ate 3/6 of a pizza, while Leo ate 5/6 of the same pizza. Who ate MORE pizza?",
+            options: [
+                { text: "Leo", isCorrect: true },
+                { text: "Sarah", isCorrect: false },
+                { text: "They ate equal amounts", isCorrect: false },
+                { text: "Neither ate pizza", isCorrect: false }
+            ],
+            explanation: "Leo ate 5/6 which is greater than Sarah's 3/6 (5/6 > 3/6).",
+            svg: null
+        },
+        {
+            category: "Word Problems",
+            question: "Daniel got 1/4 of a cake, while Ben got 1/2 of a cake of the exact same size. Who got a LARGER piece?",
+            options: [
+                { text: "Ben", isCorrect: true },
+                { text: "Daniel", isCorrect: false },
+                { text: "Both got equal pieces", isCorrect: false },
+                { text: "Cannot be compared", isCorrect: false }
+            ],
+            explanation: "1/2 represents half of the cake, which is larger than 1/4 (a quarter slice).",
+            svg: null
+        },
+        {
+            category: "Adding Fractions",
+            question: "What is 1/5 + 2/5?",
+            options: [
+                { text: "3/5", isCorrect: true, isFraction: true },
+                { text: "3/10", isCorrect: false, isFraction: true },
+                { text: "2/5", isCorrect: false, isFraction: true },
+                { text: "1/10", isCorrect: false, isFraction: true }
+            ],
+            explanation: "When adding fractions with equal denominators, add the numerators (1 + 2 = 3) and keep the denominator (5).",
+            svg: null
+        },
+        {
+            category: "Adding Fractions",
+            question: "Calculate: 2/8 + 4/8 = ...",
+            options: [
+                { text: "6/8", isCorrect: true, isFraction: true },
+                { text: "6/16", isCorrect: false, isFraction: true },
+                { text: "2/8", isCorrect: false, isFraction: true },
+                { text: "8/8", isCorrect: false, isFraction: true }
+            ],
+            explanation: "Keep the denominator (8) and add top numbers: 2 + 4 = 6, yielding 6/8.",
+            svg: null
+        },
+        {
+            category: "Subtracting Fractions",
+            question: "What is 5/7 - 2/7?",
+            options: [
+                { text: "3/7", isCorrect: true, isFraction: true },
+                { text: "3/0", isCorrect: false, isFraction: true },
+                { text: "7/7", isCorrect: false, isFraction: true },
+                { text: "2/7", isCorrect: false, isFraction: true }
+            ],
+            explanation: "For like denominators, subtract the numerators (5 - 2 = 3) and keep the denominator (7).",
+            svg: null
+        },
+        {
+            category: "Subtracting Fractions",
+            question: "A pie is cut into 6 equal slices. If 6/6 of the pie is present and 2/6 is eaten, how much pie remains?",
+            options: [
+                { text: "4/6", isCorrect: true, isFraction: true },
+                { text: "2/6", isCorrect: false, isFraction: true },
+                { text: "8/6", isCorrect: false, isFraction: true },
+                { text: "0/6", isCorrect: false, isFraction: true }
+            ],
+            explanation: "6/6 - 2/6 = 4/6 remaining slices of pie.",
+            svg: null
+        },
+        {
+            category: "Unit Fractions",
+            question: "A fraction with a numerator of 1 (such as 1/2, 1/3, 1/4) is known as a...",
+            options: [
+                { text: "Unit Fraction", isCorrect: true },
+                { text: "Improper Fraction", isCorrect: false },
+                { text: "Mixed Number", isCorrect: false },
+                { text: "Decimal Fraction", isCorrect: false }
+            ],
+            explanation: "Any fraction with a numerator of 1 represents a single unit piece and is called a unit fraction.",
+            svg: null
+        },
+        {
+            category: "Fractions Equal to 1 Whole",
+            question: "If the numerator and denominator are equal (such as 4/4 or 8/8), the fraction is equal to...",
+            options: [
+                { text: "1 Whole", isCorrect: true },
+                { text: "0", isCorrect: false },
+                { text: "2 Wholes", isCorrect: false },
+                { text: "100", isCorrect: false }
+            ],
+            explanation: "When you have all parts of a whole (e.g., 4 out of 4 slices), you have 1 complete whole object.",
+            svg: null
+        },
+        {
+            category: "Word Problems",
+            question: "Mia reads 2/10 of a book on Monday and 5/10 of the book on Tuesday. What fraction of the book has she read in total?",
+            options: [
+                { text: "7/10", isCorrect: true, isFraction: true },
+                { text: "7/20", isCorrect: false, isFraction: true },
+                { text: "3/10", isCorrect: false, isFraction: true },
+                { text: "10/10", isCorrect: false, isFraction: true }
+            ],
+            explanation: "Add the fractions read on both days: 2/10 + 5/10 = 7/10 of the book.",
+            svg: null
+        },
+        {
+            category: "Comparing to Half",
+            question: "Is 3/6 equal to 1/2?",
+            options: [
+                { text: "Yes, because 3 is half of 6", isCorrect: true },
+                { text: "No, because 3/6 is much larger", isCorrect: false },
+                { text: "No, because the numbers are different", isCorrect: false },
+                { text: "Only on weekends", isCorrect: false }
+            ],
+            explanation: "Since 3 is exactly half of 6, 3/6 simplifies directly to 1/2.",
+            svg: null
+        },
+        {
+            category: "Mastery Challenge",
+            question: "Which set of fractions is ordered correctly from SMALLEST to LARGEST?",
+            options: [
+                { text: "1/6, 3/6, 5/6", isCorrect: true, isFraction: true },
+                { text: "5/6, 3/6, 1/6", isCorrect: false, isFraction: true },
+                { text: "3/6, 1/6, 5/6", isCorrect: false, isFraction: true },
+                { text: "5/6, 1/6, 3/6", isCorrect: false, isFraction: true }
+            ],
+            explanation: "With equal denominators, order by numerators: 1 < 3 < 5, so 1/6 < 3/6 < 5/6.",
+            svg: null
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentShuffledOptions = [];
+    let hasAnsweredCurrent = false;
+
+    function formatFractionHTML(str) {
+        if (!str || typeof str !== 'string') return str;
+        const parts = str.split('/');
+        if (parts.length === 2 && !isNaN(parts[0].trim()) && !isNaN(parts[1].trim())) {
+            return `<span class="fraction-display"><span class="fraction-num">${parts[0].trim()}</span><span class="fraction-den">${parts[1].trim()}</span></span>`;
+        }
+        return str;
+    }
+
+    function startQuiz() {
+        playBeep('click');
+        document.getElementById('startScreen').classList.add('hidden');
+        document.getElementById('quizScreen').classList.remove('hidden');
+        document.getElementById('quizScreen').classList.add('flex');
+        currentQuestionIndex = 0;
+        score = 0;
+        updateScoreTracker();
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        hasAnsweredCurrent = false;
+        const q = questions[currentQuestionIndex];
+
+        // Update progress UI
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        document.getElementById('progressBar').style.width = `${progress}%`;
+        document.getElementById('questionCounter').innerText = `${currentQuestionIndex + 1}/${questions.length}`;
+        document.getElementById('questionCategory').innerText = q.category;
+        document.getElementById('questionText').innerText = q.question;
+
+        // Render SVG if available
+        const svgContainer = document.getElementById('svgContainer');
+        if (q.svg) {
+            svgContainer.innerHTML = q.svg;
+            svgContainer.classList.remove('hidden');
+        } else {
+            svgContainer.innerHTML = '';
+            svgContainer.classList.add('hidden');
+        }
+
+        // Hide explanation and disable Next button
+        document.getElementById('explanationBox').classList.add('hidden');
+        const btnNext = document.getElementById('btnNext');
+        btnNext.disabled = true;
+
+        // Shuffle options dynamically
+        currentShuffledOptions = shuffleArray(q.options);
+        const optionsGrid = document.getElementById('optionsGrid');
+        optionsGrid.innerHTML = '';
+
+        currentShuffledOptions.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = "opt-btn bg-white hover:bg-slate-100 text-slate-800 font-bold py-3 px-4 rounded-xl border border-slate-200 shadow-sm transition-all text-xs sm:text-sm flex items-center justify-center min-h-[48px]";
+            
+            if (opt.isFraction || opt.text.includes('/')) {
+                btn.innerHTML = formatFractionHTML(opt.text);
+            } else {
+                btn.innerText = opt.text;
+            }
+
+            btn.onclick = () => handleAnswer(idx);
+            optionsGrid.appendChild(btn);
+        });
+    }
+
+    function handleAnswer(selectedIndex) {
+        if (hasAnsweredCurrent) return;
+        hasAnsweredCurrent = true;
+
+        const q = questions[currentQuestionIndex];
+        const selectedOpt = currentShuffledOptions[selectedIndex];
+        const optButtons = document.querySelectorAll('.opt-btn');
+
+        optButtons.forEach(btn => btn.disabled = true);
+
+        if (selectedOpt.isCorrect) {
+            playBeep('correct');
+            score++;
+            optButtons[selectedIndex].classList.remove('bg-white', 'hover:bg-slate-100');
+            optButtons[selectedIndex].classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+        } else {
+            playBeep('wrong');
+            optButtons[selectedIndex].classList.remove('bg-white', 'hover:bg-slate-100');
+            optButtons[selectedIndex].classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+
+            // Highlight correct option
+            currentShuffledOptions.forEach((opt, idx) => {
+                if (opt.isCorrect) {
+                    optButtons[idx].classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                }
+            });
+        }
+
+        updateScoreTracker();
+
+        // Show explanation box
+        document.getElementById('explanationText').innerText = q.explanation;
+        document.getElementById('explanationBox').classList.remove('hidden');
+
+        // Enable next button
+        document.getElementById('btnNext').disabled = false;
+    }
+
+    function updateScoreTracker() {
+        document.getElementById('currentScore').innerText = score;
+    }
+
+    function nextQuestion() {
+        playBeep('click');
+        if (currentQuestionIndex < questions.length - 1) {
+            currentQuestionIndex++;
+            loadQuestion();
+        } else {
+            showSummary();
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quizScreen').classList.add('hidden');
+        document.getElementById('quizScreen').classList.remove('flex');
+        
+        const summaryScreen = document.getElementById('summaryScreen');
+        summaryScreen.classList.remove('hidden');
+        summaryScreen.classList.add('flex');
+
+        const finalScore = Math.round((score / questions.length) * 100);
+        document.getElementById('summaryCorrect').innerText = score;
+        document.getElementById('summaryScore').innerText = finalScore;
+
+        const emojiElem = document.getElementById('summaryEmoji');
+        const badgeElem = document.getElementById('summaryBadge');
+
+        if (finalScore === 100) {
+            emojiElem.innerText = "🏆";
+            badgeElem.innerText = "Outstanding! Perfect Score!";
+            badgeElem.className = "text-xl font-bold text-emerald-600";
+        } else if (finalScore >= 75) {
+            emojiElem.innerText = "🌟";
+            badgeElem.innerText = "Great Job! Fantastic Work!";
+            badgeElem.className = "text-xl font-bold text-blue-600";
+        } else if (finalScore >= 50) {
+            emojiElem.innerText = "👍";
+            badgeElem.innerText = "Good Effort! Keep Practicing!";
+            badgeElem.className = "text-xl font-bold text-indigo-600";
+        } else {
+            emojiElem.innerText = "💪";
+            badgeElem.innerText = "Don't Give Up! Try Again!";
+            badgeElem.className = "text-xl font-bold text-amber-600";
+        }
+    }
+
+    function restartQuiz() {
+        playBeep('click');
+        document.getElementById('summaryScreen').classList.add('hidden');
+        document.getElementById('summaryScreen').classList.remove('flex');
+        startQuiz();
+    }
+</script>
+
+</body>
+</html>
