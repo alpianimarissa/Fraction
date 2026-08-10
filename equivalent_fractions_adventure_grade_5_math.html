@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equivalent Fractions Adventure - Grade 5 Math</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#3B82F6',
+                            yellow: '#F59E0B',
+                            green: '#10B981',
+                            pink: '#EC4899',
+                            purple: '#8B5CF6',
+                            teal: '#14B8A6',
+                            orange: '#F97316'
+                        }
+                    },
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        nunito: ['Nunito', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F0F9FF;
+            scroll-behavior: smooth;
+        }
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', cursive;
+        }
+        /* Vertical Fraction Display Styling */
+        .fraction-display {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            align-items: center;
+            line-height: 1.1;
+            padding: 0 4px;
+            font-weight: 700;
+        }
+        .fraction-num {
+            border-bottom: 2px solid currentColor;
+            padding-bottom: 2px;
+            font-weight: 700;
+        }
+        .fraction-den {
+            padding-top: 2px;
+            font-weight: 700;
+        }
+        .custom-shadow {
+            box-shadow: 0 8px 0px 0px rgba(0, 0, 0, 0.08);
+        }
+        .btn-bounce:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0px 0px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between antialiased">
+
+    <header class="bg-white border-b-4 border-sky-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-500 p-2.5 rounded-2xl text-2xl shadow-sm text-white font-bold transform -rotate-3">
+                    🧩
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold text-indigo-700 leading-tight">Fraction Lab</h1>
+                    <p class="text-xs text-slate-500 font-bold">Grade 5 Elementary Math • Equivalent Fractions</p>
+                </div>
+            </div>
+            
+            <!-- Navigation Links -->
+            <nav class="flex flex-wrap gap-1.5 md:gap-2 text-xs md:text-sm font-bold">
+                <button onclick="scrollToSection('tujuan')" class="px-3 py-1.5 rounded-xl bg-sky-100 text-sky-700 hover:bg-sky-200 transition">🎯 Goals</button>
+                <button onclick="scrollToSection('warmup')" class="px-3 py-1.5 rounded-xl bg-amber-100 text-amber-700 hover:bg-amber-200 transition">🔥 Warm-Up</button>
+                <button onclick="scrollToSection('koneksi')" class="px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition">🌍 Real World</button>
+                <button onclick="scrollToSection('konsep')" class="px-3 py-1.5 rounded-xl bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition">💡 Concepts & Lab</button>
+                <button onclick="scrollToSection('quiz')" class="px-3 py-1.5 rounded-xl bg-pink-100 text-pink-700 hover:bg-pink-200 transition">✏️ Practice Quiz</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-8 space-y-12 flex-grow w-full">
+
+        <section id="tujuan" class="bg-gradient-to-r from-indigo-600 via-sky-600 to-teal-500 rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute right-0 top-0 opacity-10 translate-x-8 -translate-y-8 pointer-events-none">
+                <svg width="280" height="280" viewBox="0 0 100 100" fill="currentColor">
+                    <circle cx="50" cy="50" r="45" />
+                </svg>
+            </div>
+            
+            <div class="relative z-10">
+                <span class="inline-block bg-amber-300 text-slate-900 font-bold px-3.5 py-1 rounded-full text-xs uppercase tracking-wider mb-3 shadow-sm">
+                    Grade 5 Mastery Goals 🎯
+                </span>
+                <h2 class="text-2xl md:text-3xl font-bold mb-3">Equivalent Fractions Mastery</h2>
+                <p class="text-sky-100 text-sm mb-6 max-w-xl">Learn how fractions with different numerators and denominators can express the exact same amount or value!</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-slate-800">
+                    <div class="bg-white/95 p-4 rounded-2xl shadow-sm border-b-4 border-sky-400 flex items-start gap-3">
+                        <span class="text-2xl">📐</span>
+                        <div>
+                            <h3 class="font-bold text-sky-900 text-sm">Visual Scaling</h3>
+                            <p class="text-xs text-slate-600 mt-1">See how dividing bars creates equal fractions with larger terms.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/95 p-4 rounded-2xl shadow-sm border-b-4 border-amber-400 flex items-start gap-3">
+                        <span class="text-2xl">⚡</span>
+                        <div>
+                            <h3 class="font-bold text-amber-900 text-sm">Simplifying Fractions</h3>
+                            <p class="text-xs text-slate-600 mt-1">Use division (GCD) to reduce fractions down to lowest terms.</p>
+                        </div>
+                    </div>
+                    <div class="bg-white/95 p-4 rounded-2xl shadow-sm border-b-4 border-emerald-400 flex items-start gap-3">
+                        <span class="text-2xl">🔍</span>
+                        <div>
+                            <h3 class="font-bold text-emerald-900 text-sm">Missing Term Rule</h3>
+                            <p class="text-xs text-slate-600 mt-1">Find missing numbers using cross-multiplication & multipliers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="warmup" class="bg-white rounded-3xl p-6 md:p-8 border-2 border-slate-100 shadow-md">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                <div>
+                    <span class="text-xs font-bold text-amber-600 uppercase tracking-widest">Prior Knowledge Check</span>
+                    <h2 class="text-2xl font-bold text-slate-800">🔥 Warm-Up Challenge (6 Questions)</h2>
+                    <p class="text-sm text-slate-500">Test your foundation before diving into Grade 5 fraction concepts!</p>
+                </div>
+                <div class="bg-amber-100 text-amber-800 px-3 py-1.5 rounded-xl font-bold text-xs shadow-sm" id="warmup-score">
+                    Warm-Up Score: 0 / 6
+                </div>
+            </div>
+
+            <!-- Warmup Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="warmup-container">
+                <!-- Dynamic Warmup Questions Rendered via JS -->
+            </div>
+        </section>
+
+        <section id="koneksi" class="bg-emerald-50/80 rounded-3xl p-6 md:p-8 border-2 border-emerald-100 shadow-sm">
+            <div class="mb-6">
+                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Everyday Mathematics</span>
+                <h2 class="text-2xl font-bold text-emerald-900">🌍 3 Real-World Scenarios</h2>
+                <p class="text-sm text-emerald-700">We use equivalent fractions every single day without even realizing it!</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Scenario 1 -->
+                <div class="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="text-4xl mb-3 text-center">👨‍🍳</div>
+                        <h3 class="font-bold text-emerald-800 text-base mb-2 text-center">1. Baking & Recipe Scaling</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            Chef Alex needs <span class="font-bold">1/2 cup</span> of sugar. His measuring cup only measures in eighths (<span class="font-bold">1/8</span>).<br><br>
+                            He measures out <span class="font-bold text-emerald-700">4/8 cups</span>.
+                        </p>
+                    </div>
+                    <div class="bg-emerald-100/80 p-2.5 rounded-xl text-center text-xs font-bold text-emerald-900">
+                        💡 1/2 and 4/8 hold the exact same amount!
+                    </div>
+                </div>
+
+                <!-- Scenario 2 -->
+                <div class="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="text-4xl mb-3 text-center">🏃‍♀️</div>
+                        <h3 class="font-bold text-emerald-800 text-base mb-2 text-center">2. Running Track Laps</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            Maya ran <span class="font-bold">6/12</span> of a track loop.<br><br>
+                            Ethan ran <span class="font-bold">2/4</span> of the same loop.<br><br>
+                            Both covered <span class="font-bold text-emerald-700">exactly half</span> the distance!
+                        </p>
+                    </div>
+                    <div class="bg-emerald-100/80 p-2.5 rounded-xl text-center text-xs font-bold text-emerald-900">
+                        💡 6/12 = 2/4 = 1/2 distance!
+                    </div>
+                </div>
+
+                <!-- Scenario 3 -->
+                <div class="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm flex flex-col justify-between hover:shadow-md transition">
+                    <div>
+                        <div class="text-4xl mb-3 text-center">🍕</div>
+                        <h3 class="font-bold text-emerald-800 text-base mb-2 text-center">3. Pizza Slice Party</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            Pizza A is cut into 4 large slices (you eat 3 slices = <span class="font-bold">3/4</span>).<br><br>
+                            Pizza B is cut into 12 smaller slices (you eat 9 slices = <span class="font-bold">9/12</span>).
+                        </p>
+                    </div>
+                    <div class="bg-emerald-100/80 p-2.5 rounded-xl text-center text-xs font-bold text-emerald-900">
+                        💡 Eating 3/4 equals eating 9/12 of a pizza!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="konsep" class="bg-white rounded-3xl p-6 md:p-8 border-2 border-slate-100 shadow-lg space-y-8">
+            <div>
+                <span class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Grade 5 Core Math Concepts</span>
+                <h2 class="text-2xl font-bold text-slate-800">💡 How Do Equivalent Fractions Work?</h2>
+                <p class="text-sm text-slate-600 mt-1">
+                    <strong>Equivalent Fractions</strong> represent equal quantities. To generate an equivalent fraction, we multiply or divide BOTH the numerator and denominator by the <strong>same non-zero number</strong>.
+                </p>
+            </div>
+
+            <!-- Rules Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Scaling Up -->
+                <div class="bg-sky-50 p-5 rounded-2xl border-l-4 border-sky-500">
+                    <h3 class="font-bold text-sky-900 text-sm flex items-center gap-2">
+                        <span>✖️</span> Rule 1: Higher Terms (Scaling Up)
+                    </h3>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        Multiply top and bottom by the same factor <span class="font-bold text-sky-800">n</span>.
+                    </p>
+                    <div class="mt-3 bg-white p-3 rounded-xl text-center font-bold text-sky-800 shadow-sm text-xs border border-sky-100">
+                        <span class="fraction-display"><span class="fraction-num">2</span><span class="fraction-den">3</span></span>
+                        &times;
+                        <span class="fraction-display"><span class="fraction-num">4</span><span class="fraction-den">4</span></span>
+                        =
+                        <span class="fraction-display"><span class="fraction-num">8</span><span class="fraction-den">12</span></span>
+                    </div>
+                </div>
+
+                <!-- Simplifying -->
+                <div class="bg-purple-50 p-5 rounded-2xl border-l-4 border-purple-500">
+                    <h3 class="font-bold text-purple-900 text-sm flex items-center gap-2">
+                        <span>➗</span> Rule 2: Lowest Terms (Simplifying)
+                    </h3>
+                    <p class="text-xs text-slate-600 mt-2 leading-relaxed">
+                        Divide top and bottom by their Greatest Common Factor (GCF).
+                    </p>
+                    <div class="mt-3 bg-white p-3 rounded-xl text-center font-bold text-purple-800 shadow-sm text-xs border border-purple-100">
+                        <span class="fraction-display"><span class="fraction-num">8</span><span class="fraction-den">12</span></span>
+                        &divide;
+                        <span class="fraction-display"><span class="fraction-num">4</span><span class="fraction-den">4</span></span>
+                        =
+                        <span class="fraction-display"><span class="fraction-num">2</span><span class="fraction-den">3</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE SIMULATOR MACHINE -->
+            <div class="bg-slate-900 text-white p-6 rounded-3xl shadow-xl border border-slate-800">
+                <div class="text-center max-w-xl mx-auto mb-6">
+                    <span class="bg-amber-400 text-slate-900 font-bold text-xs px-3.5 py-1 rounded-full uppercase tracking-wider">Interactive Simulator</span>
+                    <h3 class="text-2xl font-bold mt-2 text-white">⚙️ Equivalent Fraction Generator Lab</h3>
+                    <p class="text-xs text-slate-300 mt-1">Select a base fraction and change the multiplier factor <span class="text-amber-300 font-bold">(n)</span> to observe how the visual bar subdivides into equal equivalent slices!</p>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex flex-wrap justify-center items-center gap-4 bg-white/10 p-4 rounded-2xl backdrop-blur-sm mb-6 border border-white/10">
+                    <div class="text-center">
+                        <label class="block text-xs text-slate-300 mb-1 font-bold">Base Fraction</label>
+                        <select id="sim-base-fraction" onchange="updateSimulator()" class="bg-slate-800 text-amber-300 font-bold px-3 py-2 rounded-xl border border-slate-600 focus:outline-none text-sm cursor-pointer hover:bg-slate-700 transition">
+                            <option value="1/2">1 / 2</option>
+                            <option value="1/3">1 / 3</option>
+                            <option value="2/3">2 / 3</option>
+                            <option value="3/4">3 / 4</option>
+                            <option value="2/5">2 / 5</option>
+                            <option value="5/6">5 / 6</option>
+                        </select>
+                    </div>
+
+                    <div class="text-2xl text-amber-400 font-bold">&times;</div>
+
+                    <div class="text-center">
+                        <label class="block text-xs text-slate-300 mb-1 font-bold">Multiplier Factor (n)</label>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeMultiplier(-1)" class="w-8 h-8 bg-amber-400 text-slate-900 font-bold rounded-lg hover:bg-amber-300 text-lg flex items-center justify-center btn-bounce">-</button>
+                            <span id="sim-multiplier-val" class="font-bold text-xl min-w-[28px] text-center text-amber-300">2</span>
+                            <button onclick="changeMultiplier(1)" class="w-8 h-8 bg-amber-400 text-slate-900 font-bold rounded-lg hover:bg-amber-300 text-lg flex items-center justify-center btn-bounce">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Comparison Bars -->
+                <div class="space-y-6 bg-slate-800/80 p-4 md:p-6 rounded-2xl border border-slate-700/60">
+                    <!-- Base Bar -->
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 font-bold mb-1.5">
+                            <span>Base Fraction: <span id="label-base-frac" class="text-sky-400 font-extrabold text-sm">1/2</span></span>
+                            <span class="text-slate-400">Original Slices</span>
+                        </div>
+                        <div id="visual-base-bar" class="h-10 bg-slate-950 rounded-xl overflow-hidden flex border-2 border-slate-700 shadow-inner">
+                            <!-- Base slices injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Result Bar -->
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-300 font-bold mb-1.5">
+                            <span>Equivalent Fraction: <span id="label-res-frac" class="text-amber-400 font-extrabold text-sm">2/4</span></span>
+                            <span class="text-slate-400">Subdivided Slices</span>
+                        </div>
+                        <div id="visual-res-bar" class="h-10 bg-slate-950 rounded-xl overflow-hidden flex border-2 border-slate-700 shadow-inner">
+                            <!-- Subdivided slices injected dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Equation Result Summary Box -->
+                    <div class="bg-indigo-950/90 border border-indigo-500/40 p-3 rounded-xl text-center text-xs md:text-sm font-bold text-indigo-200">
+                        Mathematical proof: <span id="sim-equation-text" class="text-amber-300 font-mono">1/2 × (2/2) = 2/4</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="quiz" class="bg-white rounded-3xl p-6 md:p-8 border-2 border-slate-100 shadow-xl space-y-6">
+            
+            <!-- Quiz Header -->
+            <div class="bg-gradient-to-r from-pink-500 to-purple-600 text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-md">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">✏️</span>
+                    <div>
+                        <h2 class="text-lg md:text-xl font-bold">Grade 5 Practice Quiz Lab</h2>
+                        <p class="text-xs text-pink-100">10 Questions • Test your skills with instant feedback!</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold tracking-wider" id="quizQuestionTracker">
+                        Question 1/10
+                    </div>
+                    <div class="bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-xs font-bold" id="quizScoreTracker">
+                        Score: 0/10
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Screen Container -->
+            <div id="quizScreen" class="py-2 space-y-6">
+                <!-- Question Badge & Category -->
+                <div class="text-center space-y-2">
+                    <span id="quizCategory" class="inline-block bg-purple-100 text-purple-800 font-bold px-3 py-1 rounded-full text-[11px] uppercase tracking-wider">
+                        Equivalent Basics
+                    </span>
+                    <h3 id="quizQuestionText" class="text-base md:text-lg font-bold text-slate-800 px-2 leading-relaxed">
+                        Question loading...
+                    </h3>
+                </div>
+
+                <!-- Visual Diagram / Equation Box (If applicable) -->
+                <div id="quizSvgContainer" class="flex items-center justify-center min-h-[70px] w-full">
+                    <!-- SVGs or Fraction Equations injected here -->
+                </div>
+
+                <!-- Options Grid -->
+                <div id="quizOptionsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto">
+                    <!-- Dynamic option buttons -->
+                </div>
+
+                <!-- Explanation Box -->
+                <div id="quizExplanationBox" class="hidden bg-slate-50 border-2 border-indigo-100 p-4 rounded-2xl shadow-sm max-w-lg mx-auto text-left">
+                    <p class="font-bold text-xs text-indigo-900 mb-1" id="quizExplanationTitle">💡 Step-by-Step Explanation:</p>
+                    <p class="text-slate-600 text-xs leading-relaxed" id="quizExplanationText">Explanation text...</p>
+                </div>
+
+                <!-- Quiz Controller Footer -->
+                <div class="flex justify-between items-center border-t border-slate-100 pt-4 max-w-lg mx-auto">
+                    <span class="text-xs font-semibold text-slate-400">Select an answer to proceed</span>
+                    <button id="btnQuizNext" disabled onclick="nextQuizQuestion()" class="px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition-all shadow-md disabled:opacity-40 disabled:cursor-not-allowed btn-bounce flex items-center gap-1.5">
+                        Next Question ➡️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Summary Screen (Hidden by default) -->
+            <div id="quizSummaryScreen" class="hidden flex-col items-center justify-center text-center py-8 space-y-4">
+                <div id="summaryEmoji" class="text-6xl animate-bounce">🏆</div>
+                <h2 id="summaryBadge" class="text-2xl font-bold text-emerald-600">Outstanding Mastery!</h2>
+                <p class="text-slate-500 text-xs max-w-md">You completed all 10 Grade 5 fraction challenge questions!</p>
+
+                <div class="flex items-center gap-6 my-4 bg-slate-50 p-5 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="text-center px-2">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Correct Answers</p>
+                        <p id="summaryCorrect" class="text-3xl font-bold text-emerald-500">0 / 10</p>
+                    </div>
+                    <div class="w-px h-10 bg-slate-200"></div>
+                    <div class="text-center px-2">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Percentage Score</p>
+                        <p id="summaryScore" class="text-3xl font-bold text-indigo-600">0%</p>
+                    </div>
+                </div>
+
+                <button onclick="restartQuiz()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg transition-transform hover:scale-105 text-xs btn-bounce">
+                    Try Quiz Again 🔄
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <p class="font-semibold">Interactive Grade 5 Elementary Mathematics Module • Equivalent Fractions</p>
+        <p class="text-[11px] text-slate-400 mt-1">Designed for interactive digital learning & classroom activities.</p>
+    </footer>
+
+    <script>
+        let audioCtx = null;
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            initAudio();
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    osc.frequency.setValueAtTime(164.81, audioCtx.currentTime + 0.12); // E3
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.35);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.35);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
+                    gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.08);
+                }
+            } catch (e) {
+                console.log('Audio Error:', e);
+            }
+        }
+
+        // Helper: Scroll to element smoothly
+        function scrollToSection(id) {
+            playSound('click');
+            const elem = document.getElementById(id);
+            if (elem) {
+                elem.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Helper: Format Fraction string to vertical HTML display
+        function formatFractionHTML(str) {
+            if (!str || typeof str !== 'string') return str;
+            if (str.includes('/')) {
+                const parts = str.split('/');
+                if (parts.length === 2 && !isNaN(parts[0].trim()) && !isNaN(parts[1].trim())) {
+                    return `<span class="fraction-display"><span class="fraction-num">${parts[0].trim()}</span><span class="fraction-den">${parts[1].trim()}</span></span>`;
+                }
+            }
+            return str;
+        }
+
+        const warmupData = [
+            {
+                id: 1,
+                question: "Which fraction represents half of a whole circle?",
+                options: ["1/2", "1/4", "3/4", "1/3"],
+                correct: "1/2",
+                explanation: "1/2 splits a whole object into 2 equal parts and takes 1 part."
+            },
+            {
+                id: 2,
+                question: "In the fraction 3/8, what is the number 8 called?",
+                options: ["Denominator", "Numerator", "Quotient", "Factor"],
+                correct: "Denominator",
+                explanation: "The bottom number in a fraction is the Denominator (total equal parts)."
+            },
+            {
+                id: 3,
+                question: "What is 1/4 + 2/4?",
+                options: ["3/4", "3/8", "2/4", "1/8"],
+                correct: "3/4",
+                explanation: "With the same denominator, add numerators: 1 + 2 = 3. Result = 3/4."
+            },
+            {
+                id: 4,
+                question: "True or False: 2/4 covers the exact same area as 1/2.",
+                options: ["True", "False"],
+                correct: "True",
+                explanation: "True! Both 1/2 and 2/4 represent exactly 50% or half of the whole."
+            },
+            {
+                id: 5,
+                question: "If a pizza has 6 equal slices and you eat 3 slices, what fraction did you eat?",
+                options: ["3/6", "1/6", "2/6", "4/6"],
+                correct: "3/6",
+                explanation: "3 slices out of 6 equal total slices equals 3/6 (which is equivalent to 1/2)."
+            },
+            {
+                id: 6,
+                question: "Which number makes this true: 1/3 = ?/6?",
+                options: ["2", "3", "1", "4"],
+                correct: "2",
+                explanation: "Multiply top and bottom of 1/3 by 2: 1 × 2 = 2, 3 × 2 = 6. So 1/3 = 2/6."
+            }
+        ];
+
+        let warmupScore = 0;
+        let answeredWarmup = new Set();
+
+        function renderWarmupQuestions() {
+            const container = document.getElementById('warmup-container');
+            container.innerHTML = '';
+
+            warmupData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between";
+                
+                let optionsHtml = item.options.map((opt) => {
+                    const isFrac = opt.includes('/');
+                    const displayVal = isFrac ? formatFractionHTML(opt) : opt;
+                    return `<button onclick="checkWarmup(${index}, '${opt}', this)" class="warmup-btn-${index} bg-white hover:bg-slate-100 text-slate-800 font-bold py-2 px-3 rounded-xl border border-slate-200 text-xs transition shadow-sm">${displayVal}</button>`;
+                }).join('');
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] font-bold uppercase bg-amber-200 text-amber-900 px-2 py-0.5 rounded-md">Q${index + 1}</span>
+                        </div>
+                        <p class="text-xs md:text-sm font-bold text-slate-800 mb-3">${item.question}</p>
+                    </div>
+                    <div>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            ${optionsHtml}
+                        </div>
+                        <div id="warmup-feedback-${index}" class="text-[11px] font-bold hidden p-2 rounded-lg mt-1"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkWarmup(qIdx, selectedOpt, btnElem) {
+            if (answeredWarmup.has(qIdx)) return;
+            answeredWarmup.add(qIdx);
+
+            const item = warmupData[qIdx];
+            const feedbackElem = document.getElementById(`warmup-feedback-${qIdx}`);
+            const buttons = document.querySelectorAll(`.warmup-btn-${qIdx}`);
+
+            buttons.forEach(b => b.disabled = true);
+
+            if (selectedOpt === item.correct) {
+                playSound('correct');
+                warmupScore++;
+                btnElem.classList.remove('bg-white');
+                btnElem.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+                feedbackElem.className = "text-[11px] font-bold p-2 rounded-lg mt-1 bg-emerald-100 text-emerald-800 border border-emerald-200";
+                feedbackElem.innerText = `Correct! ${item.explanation}`;
+            } else {
+                playSound('wrong');
+                btnElem.classList.remove('bg-white');
+                btnElem.classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+                feedbackElem.className = "text-[11px] font-bold p-2 rounded-lg mt-1 bg-rose-100 text-rose-800 border border-rose-200";
+                feedbackElem.innerText = `Incorrect. ${item.explanation}`;
+            }
+            feedbackElem.classList.remove('hidden');
+
+            document.getElementById('warmup-score').innerText = `Warm-Up Score: ${warmupScore} / 6`;
+        }
+
+        let simMultiplier = 2;
+
+        function changeMultiplier(delta) {
+            playSound('click');
+            const newVal = simMultiplier + delta;
+            if (newVal >= 2 && newVal <= 6) {
+                simMultiplier = newVal;
+                document.getElementById('sim-multiplier-val').innerText = simMultiplier;
+                updateSimulator();
+            }
+        }
+
+        function updateSimulator() {
+            const baseSelect = document.getElementById('sim-base-fraction').value;
+            const [num, den] = baseSelect.split('/').map(Number);
+            const resNum = num * simMultiplier;
+            const resDen = den * simMultiplier;
+
+            // Labels update
+            document.getElementById('label-base-frac').innerText = `${num}/${den}`;
+            document.getElementById('label-res-frac').innerText = `${resNum}/${resDen}`;
+            document.getElementById('sim-equation-text').innerText = `${num}/${den} × (${simMultiplier}/${simMultiplier}) = ${resNum}/${resDen}`;
+
+            // Render Base Visual Bar
+            const baseContainer = document.getElementById('visual-base-bar');
+            baseContainer.innerHTML = '';
+            for (let i = 0; i < den; i++) {
+                const slice = document.createElement('div');
+                slice.style.width = `${100 / den}%`;
+                slice.className = `h-full border-r border-slate-900 flex items-center justify-center font-bold text-xs ${i < num ? 'bg-sky-500 text-white' : 'bg-slate-800 text-slate-500'}`;
+                slice.innerText = `${i + 1}`;
+                baseContainer.appendChild(slice);
+            }
+
+            // Render Subdivided Visual Bar
+            const resContainer = document.getElementById('visual-res-bar');
+            resContainer.innerHTML = '';
+            for (let i = 0; i < resDen; i++) {
+                const slice = document.createElement('div');
+                slice.style.width = `${100 / resDen}%`;
+                // Add thicker border at base slice boundaries
+                const isBaseBoundary = (i + 1) % simMultiplier === 0 && (i + 1) !== resDen;
+                slice.className = `h-full border-r ${isBaseBoundary ? 'border-r-2 border-amber-300' : 'border-slate-900'} flex items-center justify-center font-bold text-[10px] ${i < resNum ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-500'}`;
+                slice.innerText = `${i + 1}`;
+                resContainer.appendChild(slice);
+            }
+        }
+
+        const quizQuestions = [
+            {
+                category: "Missing Terms",
+                question: "Find the missing numerator to make the fractions equivalent: 3/4 = ? / 12",
+                options: ["9", "6", "8", "10"],
+                correct: "9",
+                explanation: "To convert denominator 4 into 12, multiply by 3 (4 × 3 = 12). Multiply the numerator 3 by 3 as well: 3 × 3 = 9.",
+                visual: `<div class="bg-indigo-50 border border-indigo-200 p-3 rounded-xl text-lg font-bold text-indigo-900 flex items-center gap-3">
+                            <span class="fraction-display"><span class="fraction-num">3</span><span class="fraction-den">4</span></span>
+                            <span>&times; <span class="text-amber-600 font-extrabold">(3/3)</span> =</span>
+                            <span class="fraction-display"><span class="fraction-num text-amber-600">?</span><span class="fraction-den">12</span></span>
+                         </div>`
+            },
+            {
+                category: "Simplifying Fractions",
+                question: "What is 8/12 simplified to its lowest terms?",
+                options: ["2/3", "4/6", "3/4", "1/2"],
+                correct: "2/3",
+                explanation: "The Greatest Common Factor (GCF) of 8 and 12 is 4. Divide numerator and denominator by 4: (8 ÷ 4) / (12 ÷ 4) = 2/3.",
+                visual: `<div class="bg-purple-50 border border-purple-200 p-3 rounded-xl text-lg font-bold text-purple-900 flex items-center gap-3">
+                            <span class="fraction-display"><span class="fraction-num">8</span><span class="fraction-den">12</span></span>
+                            <span>&divide; <span class="text-purple-600 font-extrabold">(4/4)</span> =</span>
+                            <span class="fraction-display"><span class="fraction-num text-purple-600">2</span><span class="fraction-den text-purple-600">3</span></span>
+                         </div>`
+            },
+            {
+                category: "Comparing Fractions",
+                question: "Are 2/5 and 6/15 equivalent fractions?",
+                options: ["Yes, because 2/5 × (3/3) = 6/15", "No, 6/15 is larger", "No, 2/5 is larger", "Only if added together"],
+                correct: "Yes, because 2/5 × (3/3) = 6/15",
+                explanation: "Multiplying numerator 2 by 3 gives 6, and denominator 5 by 3 gives 15. Thus, they are equivalent!",
+                visual: null
+            },
+            {
+                category: "Missing Terms",
+                question: "Find the missing denominator: 5/6 = 15 / ?",
+                options: ["18", "12", "20", "24"],
+                correct: "18",
+                explanation: "Since 5 × 3 = 15, multiply the denominator 6 by 3: 6 × 3 = 18.",
+                visual: null
+            },
+            {
+                category: "Simplifying Fractions",
+                question: "Which of the following fractions is ALREADY in its simplest form (lowest terms)?",
+                options: ["3/7", "4/8", "6/9", "5/10"],
+                correct: "3/7",
+                explanation: "3 and 7 share no common factor other than 1. Fractions like 4/8 (1/2), 6/9 (2/3), and 5/10 (1/2) can all be simplified further.",
+                visual: null
+            },
+            {
+                category: "Word Problem",
+                question: "Chef Maria baked two identical pies. Pie A is sliced into 8 pieces and 6 are eaten (6/8). Pie B is sliced into 4 pieces. How many slices of Pie B equal 6/8?",
+                options: ["3 slices (3/4)", "2 slices (2/4)", "1 slice (1/4)", "4 slices (4/4)"],
+                correct: "3 slices (3/4)",
+                explanation: "Simplify 6/8 by dividing top and bottom by 2: (6 ÷ 2) / (8 ÷ 2) = 3/4. So 3 slices of Pie B equal 6/8.",
+                visual: null
+            },
+            {
+                category: "Cross-Multiplication Test",
+                question: "To test if two fractions a/b and c/d are equivalent, we can cross-multiply (a × d = b × c). Which pair is EQUIVALENT?",
+                options: ["4/10 and 10/25", "3/5 and 6/12", "2/3 and 4/9", "1/4 and 3/8"],
+                correct: "4/10 and 10/25",
+                explanation: "Cross-multiply 4/10 and 10/25: 4 × 25 = 100, and 10 × 10 = 100. Both equal 100, so they are equivalent!",
+                visual: null
+            },
+            {
+                category: "Missing Terms",
+                question: "Find the missing term: ? / 16 = 3/4",
+                options: ["12", "9", "6", "15"],
+                correct: "12",
+                explanation: "To get from denominator 4 to 16, multiply by 4 (4 × 4 = 16). Multiply numerator 3 by 4: 3 × 4 = 12.",
+                visual: null
+            },
+            {
+                category: "Simplifying Fractions",
+                question: "Simplify 15/20 to its lowest terms.",
+                options: ["3/4", "3/5", "2/3", "4/5"],
+                correct: "3/4",
+                explanation: "Divide both 15 and 20 by their GCF of 5: 15 ÷ 5 = 3, and 20 ÷ 5 = 4. Result = 3/4.",
+                visual: null
+            },
+            {
+                category: "Real World Challenge",
+                question: "Liam completed 10/15 of his homework. Lucas completed 2/3 of his homework. Who completed a greater fraction?",
+                options: ["They completed the exact same fraction!", "Liam completed more", "Lucas completed more", "Cannot be determined"],
+                correct: "They completed the exact same fraction!",
+                explanation: "Simplify Liam's fraction: 10/15 ÷ (5/5) = 2/3. Liam and Lucas completed the exact same amount!",
+                visual: null
+            }
+        ];
+
+        let quizCurrentIndex = 0;
+        let quizScore = 0;
+        let quizHasAnswered = false;
+        let quizShuffledOptions = [];
+
+        // Shuffle helper function (Fisher-Yates)
+        function shuffleArray(arr) {
+            const array = [...arr];
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function loadQuizQuestion() {
+            quizHasAnswered = false;
+            const q = quizQuestions[quizCurrentIndex];
+
+            // Tracker UI
+            document.getElementById('quizQuestionTracker').innerText = `Question ${quizCurrentIndex + 1}/${quizQuestions.length}`;
+            document.getElementById('quizScoreTracker').innerText = `Score: ${quizScore}/${quizQuestions.length}`;
+            document.getElementById('quizCategory').innerText = q.category;
+            document.getElementById('quizQuestionText').innerText = q.question;
+
+            // Visual container
+            const svgContainer = document.getElementById('quizSvgContainer');
+            if (q.visual) {
+                svgContainer.innerHTML = q.visual;
+                svgContainer.classList.remove('hidden');
+            } else {
+                svgContainer.innerHTML = '';
+                svgContainer.classList.add('hidden');
+            }
+
+            // Hide explanation & disable next button
+            document.getElementById('quizExplanationBox').classList.add('hidden');
+            document.getElementById('btnQuizNext').disabled = true;
+
+            // Render Shuffled Options
+            quizShuffledOptions = shuffleArray(q.options);
+            const grid = document.getElementById('quizOptionsGrid');
+            grid.innerHTML = '';
+
+            quizShuffledOptions.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "quiz-opt-btn bg-slate-50 hover:bg-slate-100 text-slate-800 font-bold py-3 px-4 rounded-xl border border-slate-200 shadow-sm transition text-xs sm:text-sm flex items-center justify-center min-h-[48px] btn-bounce";
+                
+                if (optText.includes('/')) {
+                    btn.innerHTML = formatFractionHTML(optText);
+                } else {
+                    btn.innerText = optText;
+                }
+
+                btn.onclick = () => handleQuizAnswer(idx);
+                grid.appendChild(btn);
+            });
+        }
+
+        function handleQuizAnswer(selectedIndex) {
+            if (quizHasAnswered) return;
+            quizHasAnswered = true;
+
+            const q = quizQuestions[quizCurrentIndex];
+            const selectedOpt = quizShuffledOptions[selectedIndex];
+            const optButtons = document.querySelectorAll('.quiz-opt-btn');
+
+            optButtons.forEach(btn => btn.disabled = true);
+
+            if (selectedOpt === q.correct) {
+                playSound('correct');
+                quizScore++;
+                optButtons[selectedIndex].classList.remove('bg-slate-50', 'hover:bg-slate-100');
+                optButtons[selectedIndex].classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+            } else {
+                playSound('wrong');
+                optButtons[selectedIndex].classList.remove('bg-slate-50', 'hover:bg-slate-100');
+                optButtons[selectedIndex].classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+
+                // Highlight correct answer
+                quizShuffledOptions.forEach((opt, idx) => {
+                    if (opt === q.correct) {
+                        optButtons[idx].classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                    }
+                });
+            }
+
+            document.getElementById('quizScoreTracker').innerText = `Score: ${quizScore}/${quizQuestions.length}`;
+
+            // Show explanation
+            document.getElementById('quizExplanationText').innerText = q.explanation;
+            document.getElementById('quizExplanationBox').classList.remove('hidden');
+
+            // Enable next button
+            document.getElementById('btnQuizNext').disabled = false;
+        }
+
+        function nextQuizQuestion() {
+            playSound('click');
+            if (quizCurrentIndex < quizQuestions.length - 1) {
+                quizCurrentIndex++;
+                loadQuizQuestion();
+            } else {
+                showQuizSummary();
+            }
+        }
+
+        function showQuizSummary() {
+            document.getElementById('quizScreen').classList.add('hidden');
+            const summary = document.getElementById('quizSummaryScreen');
+            summary.classList.remove('hidden');
+            summary.classList.add('flex');
+
+            const pct = Math.round((quizScore / quizQuestions.length) * 100);
+            document.getElementById('summaryCorrect').innerText = `${quizScore} / ${quizQuestions.length}`;
+            document.getElementById('summaryScore').innerText = `${pct}%`;
+
+            const badgeElem = document.getElementById('summaryBadge');
+            const emojiElem = document.getElementById('summaryEmoji');
+
+            if (pct >= 90) {
+                emojiElem.innerText = "🏆";
+                badgeElem.innerText = "Outstanding Mastery! Genius Level!";
+                badgeElem.className = "text-2xl font-bold text-emerald-600";
+                // Trigger confetti celebration!
+                if (window.confetti) {
+                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                }
+            } else if (pct >= 70) {
+                emojiElem.innerText = "🌟";
+                badgeElem.innerText = "Great Job! Solid Fraction Skills!";
+                badgeElem.className = "text-2xl font-bold text-sky-600";
+            } else {
+                emojiElem.innerText = "💪";
+                badgeElem.innerText = "Keep Practicing! You're Improving!";
+                badgeElem.className = "text-2xl font-bold text-amber-600";
+            }
+        }
+
+        function restartQuiz() {
+            playSound('click');
+            quizCurrentIndex = 0;
+            quizScore = 0;
+            document.getElementById('quizSummaryScreen').classList.add('hidden');
+            document.getElementById('quizSummaryScreen').classList.remove('flex');
+            document.getElementById('quizScreen').classList.remove('hidden');
+            loadQuizQuestion();
+        }
+
+        window.onload = function() {
+            renderWarmupQuestions();
+            updateSimulator();
+            loadQuizQuestion();
+        };
+    </script>
+</body>
+</html>
