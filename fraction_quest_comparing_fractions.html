@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraction Quest - Comparing Fractions</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle at center, #e0f2fe 0%, #bae6fd 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        /* Vertical Fraction Display */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            align-items: center;
+            line-height: 1.1;
+            padding: 0 4px;
+            font-weight: 800;
+        }
+        .fraction-numerator {
+            border-bottom: 2.5px solid currentColor;
+            padding-bottom: 2px;
+            font-weight: 800;
+        }
+        .fraction-denominator {
+            padding-top: 2px;
+            font-weight: 800;
+        }
+
+        /* Slide Transition Animations */
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 0.75rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        .slide-window::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide-window::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .slide-window::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+
+        /* Card Interaction Effects */
+        .interactive-card {
+            transition: all 0.2s ease-in-out;
+        }
+        .interactive-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="p-2 sm:p-4">
+
+<div id="app-container" class="w-full max-w-3xl h-[95vh] max-h-[720px] bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border-4 border-sky-300 relative">
+    
+    <!-- Navigation Bar & Progress Header -->
+    <div class="bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600 text-white py-3 px-4 flex items-center justify-between shadow-md z-20 flex-shrink-0">
+        <div class="flex items-center gap-2">
+            <span class="text-2xl animate-bounce">🍕</span>
+            <span class="text-sm sm:text-base font-extrabold tracking-wide hidden sm:inline">Fraction Quest</span>
+        </div>
+
+        <!-- Progress Bar Indicator -->
+        <div class="flex-1 max-w-xs mx-3 flex flex-col items-center">
+            <div class="w-full bg-black/20 h-3 rounded-full overflow-hidden p-0.5 border border-white/30">
+                <div id="progressBar" class="bg-amber-300 h-full rounded-full transition-all duration-300 shadow-inner" style="width: 4%;"></div>
+            </div>
+        </div>
+
+        <!-- Level Badge & Counter -->
+        <div class="flex items-center gap-2">
+            <span id="badgeLevel" class="bg-amber-400 text-slate-900 text-[10px] sm:text-xs px-2.5 py-1 rounded-full font-extrabold uppercase tracking-wider shadow-sm">Start</span>
+            <span id="pageCounter" class="bg-black/30 px-2.5 py-1 rounded-full text-xs font-bold tracking-widest min-w-[55px] text-center">1/25</span>
+        </div>
+    </div>
+
+    <!-- Main Content Viewport -->
+    <div id="slideWindow" class="slide-window flex-1 overflow-y-auto bg-slate-50/70 flex flex-col justify-between p-3 sm:p-5">
+
+        <!-- ==================== SLIDE 1: TITLE & WELCOME ==================== -->
+        <div class="slide active" data-level="Start">
+            <span class="bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Elementary Math Module</span>
+            <div class="text-center my-2">
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-sky-600 leading-tight">Master Comparing<br><span class="text-indigo-600">Fractions! ⚖️</span></h1>
+                <p class="text-slate-600 text-xs sm:text-sm mt-2 max-w-md mx-auto font-medium">Don't worry if fractions felt confusing before! Here we will learn using pizza visuals, fun colors, and quick secret tricks!</p>
+            </div>
+            
+            <div class="relative w-36 h-36 flex items-center justify-center bg-sky-100 rounded-full shadow-inner my-2 border-4 border-sky-300">
+                <svg width="100" height="100" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="42" fill="#fbbf24" stroke="#d97706" stroke-width="3"/>
+                    <path d="M50 8 A42 42 0 0 1 50 92 Z" fill="#ef4444" />
+                    <line x1="50" y1="8" x2="50" y2="92" stroke="#fff" stroke-width="3"/>
+                    <line x1="8" y1="50" x2="92" y2="50" stroke="#fff" stroke-width="3"/>
+                </svg>
+            </div>
+            <div class="bg-amber-50 border-2 border-amber-300 px-4 py-2.5 rounded-2xl text-center mb-1 max-w-md">
+                <p class="text-xs font-bold text-amber-900">💡 Tip: Click the "Next ➡️" button below to begin your quest!</p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 2: LEARNING OBJECTIVES ==================== -->
+        <div class="slide" data-level="Goals">
+            <span class="bg-indigo-100 text-indigo-700 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Learning Objectives</span>
+            <h2 class="text-xl sm:text-2xl font-bold text-slate-800 text-center">What Are Our Goals Today? 🎯</h2>
+            
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 max-w-md w-full space-y-3 my-2">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl bg-sky-100 p-2 rounded-xl">🧩</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm">1. Understand Fraction Parts</h3>
+                        <p class="text-slate-600 text-xs">Recall the Numerator (top) and Denominator (bottom).</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 border-t pt-3">
+                    <span class="text-2xl bg-amber-100 p-2 rounded-xl">🍕</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm">2. Same Denominators</h3>
+                        <p class="text-slate-600 text-xs">Easily compare fractions cut into the same number of pieces.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 border-t pt-3">
+                    <span class="text-2xl bg-purple-100 p-2 rounded-xl">🍰</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm">3. Same Numerators</h3>
+                        <p class="text-slate-600 text-xs">Discover why bigger denominators mean smaller slice sizes!</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-3 border-t pt-3">
+                    <span class="text-2xl bg-emerald-100 p-2 rounded-xl">⚡</span>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-sm">4. Cross-Multiplication Trick</h3>
+                        <p class="text-slate-600 text-xs">Secret technique to compare any fractions in 3 seconds!</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-slate-400 text-xs text-center italic">Let's start with a short Warm-Up session! 🔥</p>
+        </div>
+
+        <!-- ==================== WARM-UP QUESTION 1 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="Numerator" data-level="Warm-Up 1">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">🔥 Warm-Up Question 1 of 4</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">What is the TOP number in a fraction called?</h2>
+            
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 my-auto text-center max-w-xs w-full">
+                <div class="inline-flex flex-col items-center bg-amber-50 px-6 py-3 rounded-xl border border-amber-200">
+                    <span class="fraction text-4xl text-rose-600 font-black"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">The number <strong>3</strong> is called the...</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-bold text-sm border border-slate-200 text-slate-700 transition-all" data-ans="Numerator">⬆️ Numerator</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-bold text-sm border border-slate-200 text-slate-700 transition-all" data-ans="Denominator">⬇️ Denominator</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== WARM-UP QUESTION 2 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="2/4" data-level="Warm-Up 2">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">🔥 Warm-Up Question 2 of 4</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">What fraction represents the BLUE shaded area?</h2>
+            
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 my-auto flex flex-col items-center">
+                <svg width="90" height="90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="42" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M50 50 L50 8 A42 42 0 0 1 50 92 Z" fill="#0284c7"/>
+                    <line x1="50" y1="8" x2="50" y2="92" stroke="#fff" stroke-width="2"/>
+                    <line x1="8" y1="50" x2="92" y2="50" stroke="#fff" stroke-width="2"/>
+                </svg>
+                <p class="text-xs text-slate-500 mt-2">There are 2 blue slices out of 4 equal total slices.</p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-bold text-base border border-slate-200 text-slate-700" data-ans="1/4"><span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span></button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-bold text-base border border-slate-200 text-slate-700" data-ans="2/4"><span class="fraction"><span class="fraction-numerator">2</span><span class="fraction-denominator">4</span></span></button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-bold text-base border border-slate-200 text-slate-700" data-ans="3/4"><span class="fraction"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span></button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== WARM-UP QUESTION 3 ==================== -->
+        <div class="slide" data-type="quiz" data-correct=">" data-level="Warm-Up 3">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">🔥 Warm-Up Question 3 of 4</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Which symbol means "GREATER THAN"?</h2>
+            
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 my-auto text-center max-w-xs w-full">
+                <p class="text-xs text-slate-600 mb-2">Remember the alligator mouth trick 🐊!</p>
+                <span class="text-4xl font-black text-amber-500">&gt;</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== WARM-UP QUESTION 4 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="Cake A" data-level="Warm-Up 4">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">🔥 Warm-Up Question 4 of 4</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Which cake slice size is BIGGER?</h2>
+            
+            <div class="bg-white p-3 rounded-2xl shadow-sm border border-slate-200 my-auto text-center max-w-md w-full">
+                <div class="flex items-center justify-around">
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-indigo-600 block mb-1">Cake A (Cut into 2)</span>
+                        <div class="w-16 h-16 rounded-full bg-emerald-400 border-2 border-white shadow flex items-center justify-center font-bold text-white text-xs">1/2</div>
+                    </div>
+                    <span class="text-xl font-bold text-slate-400">vs</span>
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-rose-600 block mb-1">Cake B (Cut into 8)</span>
+                        <div class="w-16 h-16 rounded-full bg-rose-400 border-2 border-white shadow flex items-center justify-center font-bold text-white text-xs">1/8</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-emerald-50 hover:bg-emerald-100 rounded-xl font-bold text-xs border border-emerald-200 text-emerald-800" data-ans="Cake A">🍰 Cake A (Cut into 2)</button>
+                <button class="quiz-btn py-3 bg-rose-50 hover:bg-rose-100 rounded-xl font-bold text-xs border border-rose-200 text-rose-800" data-ans="Cake B">🍰 Cake B (Cut into 8)</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== SLIDE 7: BASIC CONCEPTS ==================== -->
+        <div class="slide" data-level="Basic Concept">
+            <span class="bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Lesson: Fraction Anatomy</span>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800 text-center">Never Get Them Mixed Up! ⬆️⬇️</h2>
+            
+            <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-200 max-w-md w-full flex items-center justify-around my-2 shadow-inner">
+                <div class="flex flex-col items-center bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
+                    <span class="text-rose-600 font-black text-3xl border-b-2 border-slate-800 pb-1 w-16 text-center">3</span>
+                    <span class="text-sky-600 font-black text-3xl pt-1 w-16 text-center">4</span>
+                </div>
+                <div class="text-left space-y-2 text-xs">
+                    <div class="bg-rose-100 p-2 rounded-lg border border-rose-300">
+                        <p class="font-bold text-rose-800">⬆️ TOP: NUMERATOR</p>
+                        <p class="text-slate-600 text-[11px]">How many slices we take or shade.</p>
+                    </div>
+                    <div class="bg-sky-100 p-2 rounded-lg border border-sky-300">
+                        <p class="font-bold text-sky-800">⬇️ BOTTOM: DENOMINATOR</p>
+                        <p class="text-slate-600 text-[11px]">Total ALL slices in 1 whole pizza.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-amber-100 border border-amber-300 p-2.5 rounded-xl text-center text-xs font-bold text-amber-900 max-w-md">
+                💡 Memory Trick: NUMERATOR is ON TOP, DENOMINATOR is DOWN below!
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 8: SYMBOLS & ALLIGATOR TRICK ==================== -->
+        <div class="slide" data-level="Symbols">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Comparison Symbols</span>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800 text-center">The Hungry Alligator Trick 🐊</h2>
+            
+            <div class="grid grid-cols-3 gap-2 max-w-md w-full my-3">
+                <div class="bg-rose-50 p-3 rounded-xl border border-rose-200 text-center">
+                    <span class="text-3xl font-black text-rose-600 block mb-1">&gt;</span>
+                    <span class="text-xs font-bold text-rose-800">GREATER THAN</span>
+                    <p class="text-[10px] text-slate-500 mt-1">Mouth opens to the LEFT.</p>
+                </div>
+                <div class="bg-sky-50 p-3 rounded-xl border border-sky-200 text-center">
+                    <span class="text-3xl font-black text-sky-600 block mb-1">&lt;</span>
+                    <span class="text-xs font-bold text-sky-800">LESS THAN</span>
+                    <p class="text-[10px] text-slate-500 mt-1">Mouth opens to the RIGHT.</p>
+                </div>
+                <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-200 text-center">
+                    <span class="text-3xl font-black text-emerald-600 block mb-1">=</span>
+                    <span class="text-xs font-bold text-emerald-800">EQUAL TO</span>
+                    <p class="text-[10px] text-slate-500 mt-1">Values are identical.</p>
+                </div>
+            </div>
+            <div class="bg-rose-100 p-3 rounded-xl text-center text-xs text-rose-900 font-bold max-w-md border border-rose-300">
+                🐊 Main Rule: The alligator's mouth ALWAYS opens wide towards the BIGGER fraction!
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 9: RULE 1 (SAME DENOMINATOR) ==================== -->
+        <div class="slide" data-level="Rule 1">
+            <span class="bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Rule 1: Same Denominator</span>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800 text-center">Comparing <span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span> and <span class="fraction"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span></h2>
+            
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 max-w-md w-full my-2 flex items-center justify-around shadow-sm">
+                <!-- Visual 1/4 -->
+                <div class="flex flex-col items-center">
+                    <span class="fraction text-xl text-sky-600 font-bold mb-1"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span>
+                    <svg width="75" height="75" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                        <path d="M50 50 L50 8 A42 42 0 0 1 92 50 Z" fill="#0284c7"/>
+                        <line x1="50" y1="8" x2="50" y2="92" stroke="#fff" stroke-width="2"/>
+                        <line x1="8" y1="50" x2="92" y2="50" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                    <span class="text-[11px] font-bold text-sky-700 mt-1">1 Slice</span>
+                </div>
+
+                <span class="text-3xl font-black text-rose-500">&lt;</span>
+
+                <!-- Visual 3/4 -->
+                <div class="flex flex-col items-center">
+                    <span class="fraction text-xl text-rose-600 font-bold mb-1"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span>
+                    <svg width="75" height="75" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                        <path d="M50 50 L50 8 A42 42 0 1 1 8 50 Z" fill="#e11d48"/>
+                        <line x1="50" y1="8" x2="50" y2="92" stroke="#fff" stroke-width="2"/>
+                        <line x1="8" y1="50" x2="92" y2="50" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                    <span class="text-[11px] font-bold text-rose-700 mt-1">3 Slices</span>
+                </div>
+            </div>
+
+            <div class="bg-sky-50 border border-sky-200 p-3 rounded-xl max-w-md w-full text-xs text-sky-900">
+                <p class="font-extrabold text-sm mb-1">📌 Rule 1 Conclusion:</p>
+                <p>If the BOTTOM numbers (denominators) are <strong>SAME</strong>, look at the TOP numbers (numerators). The larger top number wins!</p>
+                <p class="mt-1 font-bold text-emerald-700">Therefore: <span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span> &lt; <span class="fraction"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span></p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 10: RULE 2 (SAME NUMERATOR) ==================== -->
+        <div class="slide" data-level="Rule 2">
+            <span class="bg-purple-100 text-purple-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Rule 2: Same Numerator</span>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800 text-center">Comparing <span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">2</span></span> and <span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span></h2>
+            
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 max-w-md w-full my-2 flex items-center justify-around shadow-sm">
+                <!-- Visual 1/2 -->
+                <div class="flex flex-col items-center">
+                    <span class="fraction text-xl text-emerald-600 font-bold mb-1"><span class="fraction-numerator">1</span><span class="fraction-denominator">2</span></span>
+                    <svg width="75" height="75" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                        <path d="M50 8 A42 42 0 0 1 50 92 Z" fill="#10b981"/>
+                        <line x1="50" y1="8" x2="50" y2="92" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                    <span class="text-[11px] font-bold text-emerald-700 mt-1">BIG Slice</span>
+                </div>
+
+                <span class="text-3xl font-black text-emerald-600">&gt;</span>
+
+                <!-- Visual 1/4 -->
+                <div class="flex flex-col items-center">
+                    <span class="fraction text-xl text-purple-600 font-bold mb-1"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span>
+                    <svg width="75" height="75" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+                        <path d="M50 50 L50 8 A42 42 0 0 1 92 50 Z" fill="#8b5cf6"/>
+                        <line x1="50" y1="8" x2="50" y2="92" stroke="#fff" stroke-width="2"/>
+                        <line x1="8" y1="50" x2="92" y2="50" stroke="#fff" stroke-width="2"/>
+                    </svg>
+                    <span class="text-[11px] font-bold text-purple-700 mt-1">SMALL Slice</span>
+                </div>
+            </div>
+
+            <div class="bg-purple-50 border border-purple-200 p-3 rounded-xl max-w-md w-full text-xs text-purple-900">
+                <p class="font-extrabold text-sm mb-1">💡 Same Numerator Secret:</p>
+                <p>The <strong>MORE SLICES DIVIDED (Bigger Denominator)</strong>, the <strong>SMALLER</strong> each slice becomes! Imagine 1 cake shared between 2 people vs 8 people.</p>
+                <p class="mt-1 font-bold text-emerald-700">Therefore: <span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">2</span></span> &gt; <span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span></p>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 11: CROSS MULTIPLICATION TRICK ==================== -->
+        <div class="slide" data-level="Cross Trick">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Rule 3: Super Trick ⚡</span>
+            <h2 class="text-lg sm:text-xl font-bold text-slate-800 text-center">Cross-Multiplication Method</h2>
+            
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 max-w-md w-full my-2 text-center shadow-sm">
+                <p class="text-xs text-slate-600 mb-2">Compare <span class="fraction font-bold text-indigo-600"><span class="fraction-numerator">2</span><span class="fraction-denominator">3</span></span> and <span class="fraction font-bold text-rose-600"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span> when both top and bottom numbers differ:</p>
+
+                <div class="flex items-center justify-center gap-6 my-3">
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-indigo-600 block">Multiply: 2 × 4 = 8</span>
+                        <div class="bg-indigo-50 border-2 border-indigo-300 rounded-xl p-2 mt-1">
+                            <span class="fraction text-2xl font-bold text-indigo-600"><span class="fraction-numerator">2</span><span class="fraction-denominator">3</span></span>
+                            <span class="text-xs font-black text-indigo-800 block mt-1">(Score: 8)</span>
+                        </div>
+                    </div>
+
+                    <span class="text-2xl font-black text-slate-400">vs</span>
+
+                    <div class="text-center">
+                        <span class="text-xs font-bold text-rose-600 block">Multiply: 3 × 3 = 9</span>
+                        <div class="bg-rose-50 border-2 border-rose-300 rounded-xl p-2 mt-1">
+                            <span class="fraction text-2xl font-bold text-rose-600"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span>
+                            <span class="text-xs font-black text-rose-800 block mt-1">(Score: 9)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-emerald-100 border border-emerald-300 p-2.5 rounded-xl text-xs text-emerald-900 font-bold">
+                    Since score 8 &lt; 9, the answer is immediately found: <span class="fraction"><span class="fraction-numerator">2</span><span class="fraction-denominator">3</span></span> &lt; <span class="fraction"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span>! Super fast! 🎉
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 12: VISUALIZER LAB ==================== -->
+        <div class="slide" data-level="Exploration">
+            <span class="bg-teal-100 text-teal-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Interactive Visual Lab</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center">Compare Fractions Yourself! 🧪</h2>
+            
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200 max-w-md w-full my-1 shadow-sm space-y-3">
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Control 1 -->
+                    <div class="bg-sky-50 p-2.5 rounded-xl border border-sky-200 flex flex-col items-center">
+                        <span class="text-xs font-bold text-sky-800 mb-1">Fraction A</span>
+                        <div class="flex items-center gap-2 mb-2">
+                            <button onclick="changeVisVal('numA', -1)" class="w-6 h-6 bg-sky-200 hover:bg-sky-300 rounded font-bold text-xs">-</button>
+                            <span id="visNumA" class="fraction text-lg font-bold text-sky-700"><span class="fraction-numerator">1</span><span class="fraction-denominator" id="visDenAVal">4</span></span>
+                            <button onclick="changeVisVal('numA', 1)" class="w-6 h-6 bg-sky-200 hover:bg-sky-300 rounded font-bold text-xs">+</button>
+                        </div>
+                        <svg id="svgA" width="65" height="65" viewBox="0 0 100 100"></svg>
+                    </div>
+
+                    <!-- Control 2 -->
+                    <div class="bg-pink-50 p-2.5 rounded-xl border border-pink-200 flex flex-col items-center">
+                        <span class="text-xs font-bold text-pink-800 mb-1">Fraction B</span>
+                        <div class="flex items-center gap-2 mb-2">
+                            <button onclick="changeVisVal('numB', -1)" class="w-6 h-6 bg-pink-200 hover:bg-pink-300 rounded font-bold text-xs">-</button>
+                            <span id="visNumB" class="fraction text-lg font-bold text-pink-700"><span class="fraction-numerator">3</span><span class="fraction-denominator" id="visDenBVal">4</span></span>
+                            <button onclick="changeVisVal('numB', 1)" class="w-6 h-6 bg-pink-200 hover:bg-pink-300 rounded font-bold text-xs">+</button>
+                        </div>
+                        <svg id="svgB" width="65" height="65" viewBox="0 0 100 100"></svg>
+                    </div>
+                </div>
+
+                <!-- Live Result comparison badge -->
+                <div id="visResultBadge" class="bg-amber-100 text-amber-900 border border-amber-300 p-2 rounded-xl text-center font-extrabold text-sm">
+                    Fraction A &lt; Fraction B
+                </div>
+            </div>
+            <p class="text-[11px] text-slate-400 text-center">Try changing the numerator buttons above and watch the pie slices update live!</p>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 1 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="<" data-level="Question 1">
+            <span class="bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 1 of 12 (Same Denominator)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Compare the two fractions:</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-sky-600 sm:text-4xl"><span class="fraction-numerator">2</span><span class="fraction-denominator">6</span></span>
+                <div class="w-12 h-12 bg-sky-50 border-2 border-sky-200 flex items-center justify-center rounded-2xl text-2xl font-black text-sky-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-rose-600 sm:text-4xl"><span class="fraction-numerator">5</span><span class="fraction-denominator">6</span></span>
+            </div>
+
+            <p class="text-xs text-slate-500 text-center mb-1">Hint: Denominators are equal (6)! Look directly at numerators.</p>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 2 ==================== -->
+        <div class="slide" data-type="quiz" data-correct=">" data-level="Question 2">
+            <span class="bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 2 of 12 (Same Denominator)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Fill in with the correct comparison symbol:</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-indigo-600 sm:text-4xl"><span class="fraction-numerator">4</span><span class="fraction-denominator">5</span></span>
+                <div class="w-12 h-12 bg-indigo-50 border-2 border-indigo-200 flex items-center justify-center rounded-2xl text-2xl font-black text-indigo-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-amber-600 sm:text-4xl"><span class="fraction-numerator">2</span><span class="fraction-denominator">5</span></span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 3 ==================== -->
+        <div class="slide" data-type="quiz" data-correct=">" data-level="Question 3">
+            <span class="bg-purple-100 text-purple-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 3 of 12 (Same Numerator)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Remember! Top numerators are the SAME:</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-emerald-600 sm:text-4xl"><span class="fraction-numerator">1</span><span class="fraction-denominator">3</span></span>
+                <div class="w-12 h-12 bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center rounded-2xl text-2xl font-black text-emerald-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-purple-600 sm:text-4xl"><span class="fraction-numerator">1</span><span class="fraction-denominator">5</span></span>
+            </div>
+
+            <p class="text-xs text-slate-500 text-center mb-1">Hint: Cut into 3 pieces gives bigger slices than cut into 5!</p>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 4 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="<" data-level="Question 4">
+            <span class="bg-purple-100 text-purple-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 4 of 12 (Same Numerator)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Compare the following fractions:</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-rose-600 sm:text-4xl"><span class="fraction-numerator">3</span><span class="fraction-denominator">8</span></span>
+                <div class="w-12 h-12 bg-rose-50 border-2 border-rose-200 flex items-center justify-center rounded-2xl text-2xl font-black text-rose-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-sky-600 sm:text-4xl"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 5 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="=" data-level="Question 5">
+            <span class="bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 5 of 12 (Equivalent Fractions)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Are these two fractions equal in value?</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-teal-600 sm:text-4xl"><span class="fraction-numerator">1</span><span class="fraction-denominator">2</span></span>
+                <div class="w-12 h-12 bg-teal-50 border-2 border-teal-200 flex items-center justify-center rounded-2xl text-2xl font-black text-teal-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-purple-600 sm:text-4xl"><span class="fraction-numerator">2</span><span class="fraction-denominator">4</span></span>
+            </div>
+
+            <p class="text-xs text-slate-500 text-center mb-1">Hint: Half of 4 is 2!</p>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 6 ==================== -->
+        <div class="slide" data-type="quiz" data-correct=">" data-level="Question 6">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 6 of 12 (Cross Multiplication)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Use the Cross-Multiplication Trick! ⚡</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-indigo-600 sm:text-4xl"><span class="fraction-numerator">3</span><span class="fraction-denominator">4</span></span>
+                <div class="w-12 h-12 bg-indigo-50 border-2 border-indigo-200 flex items-center justify-center rounded-2xl text-2xl font-black text-indigo-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-emerald-600 sm:text-4xl"><span class="fraction-numerator">2</span><span class="fraction-denominator">3</span></span>
+            </div>
+
+            <p class="text-xs text-slate-500 text-center mb-1">(3 × 3 = 9)  vs  (4 × 2 = 8)</p>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 7 (WORD PROBLEM 1) ==================== -->
+        <div class="slide" data-type="quiz" data-correct="Nina" data-level="Story 1">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 7 of 12 (Pizza Word Problem)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Who Ate More Pizza? 🍕</h2>
+            
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 max-w-md w-full my-auto text-xs sm:text-sm text-slate-700 space-y-2 shadow-sm text-center">
+                <p>Leo ate <span class="fraction font-bold text-sky-600"><span class="fraction-numerator">3</span><span class="fraction-denominator">6</span></span> of a pizza, while Nina ate <span class="fraction font-bold text-pink-600"><span class="fraction-numerator">5</span><span class="fraction-denominator">6</span></span> of the same sized pizza.</p>
+                <p class="font-extrabold text-slate-800 text-sm">Who ate MORE pizza?</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-sky-50 hover:bg-sky-100 text-sky-800 rounded-xl font-bold text-sm border border-sky-200" data-ans="Leo">👦 Leo (<span class="fraction"><span class="fraction-numerator">3</span><span class="fraction-denominator">6</span></span>)</button>
+                <button class="quiz-btn py-3 bg-pink-50 hover:bg-pink-100 text-pink-800 rounded-xl font-bold text-sm border border-pink-200" data-ans="Nina">👧 Nina (<span class="fraction"><span class="fraction-numerator">5</span><span class="fraction-denominator">6</span></span>)</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 8 (WORD PROBLEM 2) ==================== -->
+        <div class="slide" data-type="quiz" data-correct="Ben" data-level="Story 2">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 8 of 12 (Cake Word Problem)</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Who Got a Bigger Slice? 🍰</h2>
+            
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 max-w-md w-full my-auto text-xs sm:text-sm text-slate-700 space-y-2 shadow-sm text-center">
+                <p>David got <span class="fraction font-bold text-indigo-600"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span> of a cake, while Ben got <span class="fraction font-bold text-emerald-600"><span class="fraction-numerator">1</span><span class="fraction-denominator">2</span></span> of a cake from the same tray.</p>
+                <p class="font-extrabold text-slate-800 text-sm">Who got the BIGGER slice?</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-xl font-bold text-sm border border-indigo-200" data-ans="David">👦 David (<span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">4</span></span>)</button>
+                <button class="quiz-btn py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl font-bold text-sm border border-emerald-200" data-ans="Ben">👦 Ben (<span class="fraction"><span class="fraction-numerator">1</span><span class="fraction-denominator">2</span></span>)</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 9 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="<" data-level="Question 9">
+            <span class="bg-sky-100 text-sky-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 9 of 12</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Compare the following fractions:</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-purple-600 sm:text-4xl"><span class="fraction-numerator">3</span><span class="fraction-denominator">10</span></span>
+                <div class="w-12 h-12 bg-purple-50 border-2 border-purple-200 flex items-center justify-center rounded-2xl text-2xl font-black text-purple-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-rose-600 sm:text-4xl"><span class="fraction-numerator">7</span><span class="fraction-denominator">10</span></span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 10 ==================== -->
+        <div class="slide" data-type="quiz" data-correct=">" data-level="Question 10">
+            <span class="bg-purple-100 text-purple-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 10 of 12</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Compare fractions with the same numerator:</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-emerald-600 sm:text-4xl"><span class="fraction-numerator">2</span><span class="fraction-denominator">3</span></span>
+                <div class="w-12 h-12 bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center rounded-2xl text-2xl font-black text-emerald-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-teal-600 sm:text-4xl"><span class="fraction-numerator">2</span><span class="fraction-denominator">5</span></span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 11 ==================== -->
+        <div class="slide" data-type="quiz" data-correct="=" data-level="Question 11">
+            <span class="bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 11 of 12</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Compare these two fractions:</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-purple-600 sm:text-4xl"><span class="fraction-numerator">2</span><span class="fraction-denominator">6</span></span>
+                <div class="w-12 h-12 bg-purple-50 border-2 border-purple-200 flex items-center justify-center rounded-2xl text-2xl font-black text-purple-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-purple-600 sm:text-4xl"><span class="fraction-numerator">1</span><span class="fraction-denominator">3</span></span>
+            </div>
+
+            <p class="text-xs text-slate-500 text-center mb-1">Try cross-multiplication: 2×3 = 6 and 6×1 = 6!</p>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== PRACTICE QUESTION 12 ==================== -->
+        <div class="slide" data-type="quiz" data-correct=">" data-level="Question 12">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs">Question 12 of 12</span>
+            <h2 class="text-base sm:text-lg font-bold text-slate-800 text-center my-1">Final Question! Which one is greater?</h2>
+            
+            <div class="flex items-center justify-center gap-6 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 my-auto min-w-[260px]">
+                <span class="fraction text-3xl font-bold text-amber-600 sm:text-4xl"><span class="fraction-numerator">5</span><span class="fraction-denominator">8</span></span>
+                <div class="w-12 h-12 bg-amber-50 border-2 border-amber-200 flex items-center justify-center rounded-2xl text-2xl font-black text-amber-600 shadow-inner">?</div>
+                <span class="fraction text-3xl font-bold text-sky-600 sm:text-4xl"><span class="fraction-numerator">3</span><span class="fraction-denominator">8</span></span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 w-full max-w-xs mb-2">
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans=">">&gt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="<">&lt;</button>
+                <button class="quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-black text-2xl border border-slate-200 text-slate-700" data-ans="=">=</button>
+            </div>
+            <div class="feedback-box text-xs font-bold min-h-[22px] mb-2 text-center"></div>
+        </div>
+
+        <!-- ==================== FINAL RESULT SLIDE ==================== -->
+        <div id="resultSlide" class="slide" data-level="Final Result">
+            <span class="bg-amber-100 text-amber-800 font-extrabold px-3 py-1 rounded-full text-xs uppercase tracking-wider">Quest Completed! 🎉</span>
+            
+            <div class="text-center my-auto space-y-2">
+                <span class="text-6xl block my-1">🏆</span>
+                <h2 class="text-2xl font-extrabold text-slate-800">Awesome Job! You Did It!</h2>
+                
+                <div class="bg-sky-50 border-2 border-sky-300 rounded-2xl p-4 my-2 max-w-xs mx-auto shadow-inner">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Your Final Score</p>
+                    <p id="finalScoreText" class="text-4xl font-black text-sky-600 my-1">0 / 100</p>
+                    <p id="accuracyText" class="text-xs font-bold text-slate-700">Correct Answers: 0 out of 12 Questions</p>
+                </div>
+
+                <p id="resultMessage" class="text-xs sm:text-sm text-slate-600 font-medium px-4 max-w-md mx-auto">Keep up the practice! Now you know secret tricks to compare fractions!</p>
+            </div>
+
+            <button onclick="restartQuiz()" class="px-8 py-3 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-extrabold rounded-2xl shadow-lg transition-all text-sm mb-2">
+                Restart Adventure 🔄
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Bottom Action Navigation Controls -->
+    <div class="bg-white border-t border-slate-200 p-3 flex items-center justify-between z-20 flex-shrink-0">
+        <button id="prevBtn" onclick="prevSlide()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs sm:text-sm transition-all flex items-center gap-1 shadow-sm">
+            ⬅️ Back
+        </button>
+        
+        <span class="text-xs text-slate-400 font-semibold hidden sm:inline">Use navigation or click options directly</span>
+
+        <button id="nextBtn" onclick="nextSlide()" class="px-6 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-extrabold rounded-xl text-xs sm:text-sm transition-all shadow-md flex items-center gap-1">
+            Next ➡️
+        </button>
+    </div>
+
+</div>
+
+<script>
+    let currentSlideIndex = 0;
+    let score = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    const totalQuestions = 12;
+
+    // Interactive Visualizer state
+    let visValA = 1;
+    let visDenA = 4;
+    let visValB = 3;
+    let visDenB = 4;
+
+    window.onload = function() {
+        updateProgress();
+        renderVisualizer();
+    };
+
+    // Attach event listeners to quiz buttons
+    slides.forEach((slide) => {
+        if (slide.dataset.type === 'quiz') {
+            const buttons = slide.querySelectorAll('.quiz-btn');
+            const correctAnswer = slide.dataset.correct;
+            const feedbackBox = slide.querySelector('.feedback-box');
+
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Lock buttons on answer
+                    buttons.forEach(b => b.disabled = true);
+
+                    const selectedAns = btn.dataset.ans;
+                    if (selectedAns === correctAnswer) {
+                        score += 1;
+                        btn.classList.remove('bg-slate-100', 'hover:bg-sky-100');
+                        btn.classList.add('bg-emerald-500', 'text-white', 'border-emerald-600');
+                        if (feedbackBox) {
+                            feedbackBox.innerHTML = '<span class="text-emerald-600">✨ Yay! That\'s EXACTLY CORRECT! 🎉</span>';
+                        }
+                    } else {
+                        btn.classList.remove('bg-slate-100', 'hover:bg-sky-100');
+                        btn.classList.add('bg-rose-500', 'text-white', 'border-rose-600');
+                        if (feedbackBox) {
+                            feedbackBox.innerHTML = `<span class="text-rose-600">❌ Almost! The correct answer is: <strong>${correctAnswer}</strong></span>`;
+                        }
+                        
+                        // Highlight correct button
+                        buttons.forEach(b => {
+                            if (b.dataset.ans === correctAnswer) {
+                                b.classList.add('ring-2', 'ring-emerald-500', 'bg-emerald-100');
+                            }
+                        });
+                    }
+
+                    // Auto transition after short delay
+                    setTimeout(() => {
+                        nextSlide();
+                    }, 1200);
+                });
+            });
+        }
+    });
+
+    function nextSlide() {
+        if (currentSlideIndex < slides.length - 1) {
+            slides[currentSlideIndex].classList.remove('active');
+            currentSlideIndex++;
+            slides[currentSlideIndex].classList.add('active');
+            updateProgress();
+
+            if (slides[currentSlideIndex].id === 'resultSlide') {
+                showFinalResults();
+            }
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlideIndex > 0) {
+            slides[currentSlideIndex].classList.remove('active');
+            currentSlideIndex--;
+            slides[currentSlideIndex].classList.add('active');
+            updateProgress();
+        }
+    }
+
+    function updateProgress() {
+        const currentSlide = slides[currentSlideIndex];
+        const progressPercentage = ((currentSlideIndex + 1) / totalSlides) * 100;
+        document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+        document.getElementById('pageCounter').innerText = `${currentSlideIndex + 1}/${totalSlides}`;
+        
+        // Update Level Badge Title
+        const levelTag = currentSlide.dataset.level || "Practice";
+        document.getElementById('badgeLevel').innerText = levelTag;
+
+        // Button Visibility
+        document.getElementById('prevBtn').style.visibility = (currentSlideIndex === 0) ? 'hidden' : 'visible';
+        if (currentSlide.id === 'resultSlide') {
+            document.getElementById('nextBtn').style.display = 'none';
+        } else {
+            document.getElementById('nextBtn').style.display = 'inline-flex';
+        }
+    }
+
+    function showFinalResults() {
+        const finalScore = Math.round((score / totalQuestions) * 100);
+        document.getElementById('finalScoreText').innerText = `${finalScore} / 100`;
+        document.getElementById('accuracyText').innerText = `Correct Answers: ${score} out of ${totalQuestions} Practice Questions`;
+
+        const msgElem = document.getElementById('resultMessage');
+        if (finalScore === 100) {
+            msgElem.innerText = "🌟 Perfect! You are a true Fraction Master! Not a single mistake!";
+        } else if (finalScore >= 75) {
+            msgElem.innerText = "🎉 Outstanding! Your fraction comparison skills are super sharp!";
+        } else if (finalScore >= 50) {
+            msgElem.innerText = "👍 Great job! Keep practicing the cross-multiplication trick to master it!";
+        } else {
+            msgElem.innerText = "💪 Don't give up! Try this module once more, you can do it!";
+        }
+    }
+
+    function restartQuiz() {
+        score = 0;
+
+        // Reset all quiz slides
+        slides.forEach(slide => {
+            if (slide.dataset.type === 'quiz') {
+                const buttons = slide.querySelectorAll('.quiz-btn');
+                const feedbackBox = slide.querySelector('.feedback-box');
+                if (feedbackBox) feedbackBox.innerHTML = '';
+
+                buttons.forEach(btn => {
+                    btn.disabled = false;
+                    btn.className = 'quiz-btn py-3 bg-slate-100 hover:bg-sky-100 rounded-xl font-bold border border-slate-200 text-slate-700 transition-all';
+                    
+                    if (slide.dataset.level.startsWith('Story')) {
+                        if (btn.dataset.ans === 'Leo') btn.className = 'quiz-btn py-3 bg-sky-50 hover:bg-sky-100 text-sky-800 rounded-xl font-bold text-sm border border-sky-200';
+                        if (btn.dataset.ans === 'Nina') btn.className = 'quiz-btn py-3 bg-pink-50 hover:bg-pink-100 text-pink-800 rounded-xl font-bold text-sm border border-pink-200';
+                        if (btn.dataset.ans === 'David') btn.className = 'quiz-btn py-3 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-xl font-bold text-sm border border-indigo-200';
+                        if (btn.dataset.ans === 'Ben') btn.className = 'quiz-btn py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl font-bold text-sm border border-emerald-200';
+                    }
+                });
+            }
+        });
+
+        // Jump back to index 0
+        slides[currentSlideIndex].classList.remove('active');
+        currentSlideIndex = 0;
+        slides[0].classList.add('active');
+        updateProgress();
+    }
+
+    /* Helper Function for Visualizer Lab */
+    function changeVisVal(target, delta) {
+        if (target === 'numA') {
+            visValA = Math.max(1, Math.min(visDenA, visValA + delta));
+            document.querySelector('#visNumA .fraction-numerator').innerText = visValA;
+        } else if (target === 'numB') {
+            visValB = Math.max(1, Math.min(visDenB, visValB + delta));
+            document.querySelector('#visNumB .fraction-numerator').innerText = visValB;
+        }
+        renderVisualizer();
+    }
+
+    function renderVisualizer() {
+        drawPie('svgA', visValA, visDenA, '#0284c7');
+        drawPie('svgB', visValB, visDenB, '#ec4899');
+
+        const valA = visValA / visDenA;
+        const valB = visValB / visDenB;
+        const badge = document.getElementById('visResultBadge');
+
+        if (valA > valB) {
+            badge.innerText = `Fraction A (${visValA}/${visDenA}) > Fraction B (${visValB}/${visDenB})`;
+            badge.className = "bg-sky-100 text-sky-900 border border-sky-300 p-2 rounded-xl text-center font-extrabold text-xs sm:text-sm";
+        } else if (valA < valB) {
+            badge.innerText = `Fraction A (${visValA}/${visDenA}) < Fraction B (${visValB}/${visDenB})`;
+            badge.className = "bg-pink-100 text-pink-900 border border-pink-300 p-2 rounded-xl text-center font-extrabold text-xs sm:text-sm";
+        } else {
+            badge.innerText = `Fraction A (${visValA}/${visDenA}) = Fraction B (${visValB}/${visDenB})`;
+            badge.className = "bg-emerald-100 text-emerald-900 border border-emerald-300 p-2 rounded-xl text-center font-extrabold text-xs sm:text-sm";
+        }
+    }
+
+    function drawPie(svgId, num, den, color) {
+        const svg = document.getElementById(svgId);
+        if (!svg) return;
+        svg.innerHTML = '';
+        
+        const cx = 50, cy = 50, r = 40;
+        
+        // Background circle
+        const bgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        bgCircle.setAttribute('cx', cx);
+        bgCircle.setAttribute('cy', cy);
+        bgCircle.setAttribute('r', r);
+        bgCircle.setAttribute('fill', '#e2e8f0');
+        bgCircle.setAttribute('stroke', '#94a3b8');
+        bgCircle.setAttribute('stroke-width', '2');
+        svg.appendChild(bgCircle);
+
+        // Draw Shaded Slice
+        const angle = (num / den) * 360;
+        if (num === den) {
+            bgCircle.setAttribute('fill', color);
+        } else if (num > 0) {
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            const radians = (angle - 90) * (Math.PI / 180);
+            const x = cx + r * Math.cos(radians);
+            const y = cy + r * Math.sin(radians);
+            const largeArc = angle > 180 ? 1 : 0;
+            const d = `M ${cx} ${cy} L ${cx} ${cy - r} A ${r} ${r} 0 ${largeArc} 1 ${x} ${y} Z`;
+            path.setAttribute('d', d);
+            path.setAttribute('fill', color);
+            svg.appendChild(path);
+        }
+
+        // Draw slice lines
+        for (let i = 0; i < den; i++) {
+            const lineAngle = (i * (360 / den) - 90) * (Math.PI / 180);
+            const lx = cx + r * Math.cos(lineAngle);
+            const ly = cy + r * Math.sin(lineAngle);
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', cx);
+            line.setAttribute('y1', cy);
+            line.setAttribute('x2', lx);
+            line.setAttribute('y2', ly);
+            line.setAttribute('stroke', '#ffffff');
+            line.setAttribute('stroke-width', '2');
+            svg.appendChild(line);
+        }
+    }
+</script>
+</body>
+</html>
