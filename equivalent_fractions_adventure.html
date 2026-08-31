@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equivalent Fractions Adventure | Singapore Math & IB PYP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .font-heading {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+        .fraction-bar {
+            transition: all 0.3s ease;
+        }
+        .pulse-glow {
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(99, 102, 241, 0.8); }
+        }
+        /* Vertical Fraction Helper Styles */
+        .v-frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            line-height: 1.1;
+            padding: 0 0.15rem;
+        }
+        .v-frac .num {
+            border-bottom: 2px solid currentColor;
+            padding-bottom: 1px;
+            width: 100%;
+            text-align: center;
+        }
+        .v-frac .den {
+            padding-top: 1px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen pb-12">
+
+    <!-- Header Navigation -->
+    <header class="bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <span class="text-3xl">🍕</span>
+                <div>
+                    <h1 class="font-heading text-xl md:text-2xl font-bold leading-tight">Equivalent Fractions Adventure</h1>
+                    <p class="text-xs text-indigo-200">Singapore Math & IB Inquiry Approach • Grade 5</p>
+                </div>
+            </div>
+            <div class="hidden sm:flex space-x-2">
+                <span class="bg-indigo-700 text-indigo-100 text-xs px-2.5 py-1 rounded-full font-medium">Inquirer</span>
+                <span class="bg-indigo-700 text-indigo-100 text-xs px-2.5 py-1 rounded-full font-medium">Thinker</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-6 space-y-8">
+
+        <!-- SECTION 1: LEARNING GOALS -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl font-bold">🎯</div>
+                <div>
+                    <h2 class="font-heading text-xl font-bold text-slate-800">Learning Goals</h2>
+                    <p class="text-xs text-slate-500">What will you master today?</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-amber-50/60 border border-amber-200/60 rounded-xl p-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-amber-600 uppercase tracking-wider block mb-1">Concrete & Visual</span>
+                        <p class="text-sm font-medium text-slate-700">Visually see that equivalent fractions cover the <b>exact same area</b>.</p>
+                    </div>
+                    <div class="mt-3 text-2xl">📊</div>
+                </div>
+                <div class="bg-indigo-50/60 border border-indigo-200/60 rounded-xl p-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">Golden Rule</span>
+                        <p class="text-sm font-medium text-slate-700">Multiply or divide numerator & denominator by the <b>same number</b>.</p>
+                    </div>
+                    <div class="mt-3 text-2xl">🔑</div>
+                </div>
+                <div class="bg-emerald-50/60 border border-emerald-200/60 rounded-xl p-4 flex flex-col justify-between">
+                    <div>
+                        <span class="text-xs font-bold text-emerald-600 uppercase tracking-wider block mb-1">Problem Solver</span>
+                        <p class="text-sm font-medium text-slate-700">Solve real-world inquiry challenges with total confidence!</p>
+                    </div>
+                    <div class="mt-3 text-2xl">🚀</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 2: WARM-UP (4 Fraction Comparison Questions) -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-xl font-bold">🔥</div>
+                    <div>
+                        <h2 class="font-heading text-xl font-bold text-slate-800">Warm-up: Fraction Detective</h2>
+                        <p class="text-xs text-slate-500">Compare the two fractions! Choose the correct symbol: <b>&lt;</b> , <b>=</b> , or <b>&gt;</b></p>
+                    </div>
+                </div>
+                <span id="warmup-score" class="bg-rose-50 text-rose-600 font-bold px-3 py-1 rounded-full text-sm border border-rose-200">Score: 0/4</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="warmup-container">
+                <!-- Warmup Items generated by JS -->
+            </div>
+        </section>
+
+
+        <!-- SECTION 3: REAL-WORLD CONNECTION -->
+        <section class="bg-gradient-to-br from-indigo-600 to-purple-700 rounded-2xl p-6 text-white shadow-md">
+            <div class="flex items-start space-x-4">
+                <div class="text-4xl bg-white/10 p-3 rounded-2xl backdrop-blur-sm">🍕</div>
+                <div class="space-y-3">
+                    <span class="bg-indigo-400/30 text-indigo-100 text-xs px-3 py-1 rounded-full font-medium border border-indigo-300/30">Real-World Inquiry Story</span>
+                    <h2 class="font-heading text-2xl font-bold">Ken & Chloe's Pizza Mystery</h2>
+                    <p class="text-indigo-100 text-sm leading-relaxed">
+                        Ken and Chloe ordered two pizzas of the <b>exact same size</b>.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-2">
+                        <div class="bg-white/10 p-4 rounded-xl border border-white/20 text-center">
+                            <p class="font-bold text-yellow-300 text-lg mb-1">Ken's Pizza</p>
+                            <p class="text-xs text-indigo-100 mb-3">Cut into 2 equal large slices. Ken eats 1 slice.</p>
+                            <div class="inline-flex items-center justify-center bg-white text-indigo-900 font-bold px-4 py-2 rounded-lg text-lg">
+                                <div class="v-frac">
+                                    <span class="num">1</span>
+                                    <span class="den">2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white/10 p-4 rounded-xl border border-white/20 text-center">
+                            <p class="font-bold text-yellow-300 text-lg mb-1">Chloe's Pizza</p>
+                            <p class="text-xs text-indigo-100 mb-3">Cut into 4 equal medium slices. Chloe eats 2 slices.</p>
+                            <div class="inline-flex items-center justify-center bg-white text-indigo-900 font-bold px-4 py-2 rounded-lg text-lg">
+                                <div class="v-frac">
+                                    <span class="num">2</span>
+                                    <span class="den">4</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-yellow-400 text-slate-900 p-4 rounded-xl font-medium text-sm shadow-inner flex items-center space-x-3">
+                        <span class="text-2xl">💡</span>
+                        <div>
+                            <b>Inquiry Question:</b> Who ate more pizza?
+                            <br><span class="text-xs text-slate-800">Answer: <b>THEY ATE THE EXACT SAME AMOUNT!</b> Because 
+                                <span class="v-frac font-bold"><span class="num">1</span><span class="den">2</span></span> 
+                                and 
+                                <span class="v-frac font-bold"><span class="num">2</span><span class="den">4</span></span> 
+                                cover the exact same total area. These are called <b>Equivalent Fractions</b>.
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 4: FULL CONCEPT & INTERACTIVE VISUALIZER -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl font-bold">💡</div>
+                <div>
+                    <h2 class="font-heading text-xl font-bold text-slate-800">Equivalent Fractions Lab</h2>
+                    <p class="text-xs text-slate-500">Use the interactive simulator below to uncover the secret of equivalent fractions!</p>
+                </div>
+            </div>
+
+            <!-- Conceptual Rule Box -->
+            <div class="bg-slate-50 border-l-4 border-blue-500 p-4 rounded-r-xl space-y-2">
+                <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                    <span>✨ The Golden Rule of Equivalent Fractions</span>
+                </h3>
+                <p class="text-xs text-slate-600 leading-relaxed">
+                    To make an equivalent fraction, <b>MULTIPLY</b> or <b>DIVIDE</b> both the numerator (top number) and denominator (bottom number) by the <b>SAME NUMBER</b> (except 0).
+                </p>
+                <div class="flex items-center justify-center space-x-8 py-3 bg-white rounded-lg border border-slate-200 text-xs sm:text-sm font-semibold text-indigo-700">
+                    <div class="flex items-center space-x-1">
+                        <div class="v-frac font-bold text-base">
+                            <span class="num">A × k</span>
+                            <span class="den">B × k</span>
+                        </div>
+                    </div>
+                    <span class="text-slate-400 font-normal">or</span>
+                    <div class="flex items-center space-x-1">
+                        <div class="v-frac font-bold text-base">
+                            <span class="num">A ÷ k</span>
+                            <span class="den">B ÷ k</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE EXPLORER SIMULATOR -->
+            <div class="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 space-y-6">
+                <div class="text-center max-w-xl mx-auto">
+                    <h3 class="font-heading font-bold text-indigo-950 text-lg">Live Slicer Visualizer</h3>
+                    <p class="text-xs text-slate-600">Choose a base fraction, then change the multiplier to see how slices subdivide without altering the total shaded value!</p>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex flex-wrap justify-center items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center space-x-2">
+                        <label class="text-xs font-bold text-slate-600">Base Fraction:</label>
+                        <select id="base-fraction-select" class="bg-slate-100 border border-slate-300 rounded-lg text-sm font-bold px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="1/2">1/2</option>
+                            <option value="1/3">1/3</option>
+                            <option value="2/3">2/3</option>
+                            <option value="3/4">3/4</option>
+                            <option value="2/5">2/5</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <label class="text-xs font-bold text-slate-600">Multiply (Top & Bottom) by:</label>
+                        <div class="flex space-x-1" id="multiplier-btns">
+                            <button data-mult="1" class="mult-btn px-3 py-1 rounded-lg font-bold text-xs bg-indigo-600 text-white shadow-sm">x1</button>
+                            <button data-mult="2" class="mult-btn px-3 py-1 rounded-lg font-bold text-xs bg-slate-200 text-slate-700 hover:bg-slate-300">x2</button>
+                            <button data-mult="3" class="mult-btn px-3 py-1 rounded-lg font-bold text-xs bg-slate-200 text-slate-700 hover:bg-slate-300">x3</button>
+                            <button data-mult="4" class="mult-btn px-3 py-1 rounded-lg font-bold text-xs bg-slate-200 text-slate-700 hover:bg-slate-300">x4</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Output Display -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-white p-6 rounded-xl border border-slate-200">
+                    <!-- Text Formula -->
+                    <div class="flex flex-col items-center justify-center space-y-4 border-b md:border-b-0 md:border-r border-slate-100 pb-4 md:pb-0 md:pr-4">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Mathematical Equation</span>
+                        <div class="flex items-center space-x-3 text-xl sm:text-2xl font-bold font-heading">
+                            <!-- Base Fraction Vertical -->
+                            <div class="v-frac text-indigo-600 font-bold">
+                                <span id="eq-num1" class="num">1</span>
+                                <span id="eq-den1" class="den">2</span>
+                            </div>
+
+                            <span class="text-slate-400">=</span>
+
+                            <!-- Operation Display -->
+                            <div class="text-xs text-slate-500 flex flex-col items-center">
+                                <span>× <span id="eq-mult-display">1</span></span>
+                                <span class="w-8 border-b border-slate-400 my-0.5"></span>
+                                <span>× <span id="eq-mult-display2">1</span></span>
+                            </div>
+
+                            <span class="text-slate-400">=</span>
+
+                            <!-- Result Fraction Vertical -->
+                            <div class="bg-indigo-50 px-3 py-1.5 rounded-lg border border-indigo-200">
+                                <div class="v-frac text-indigo-700 font-bold">
+                                    <span id="eq-num2" class="num">1</span>
+                                    <span id="eq-den2" class="den">2</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="eq-explanation" class="text-xs text-slate-500 text-center">
+                            The total shaded area remains identical—only the number of slices changes!
+                        </p>
+                    </div>
+
+                    <!-- Visual Strip Graphic -->
+                    <div class="space-y-4">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block text-center">Visual Bar Model</span>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-600 mb-1">Original Fraction (<span id="strip1-label">1/2</span>):</p>
+                                <div id="strip1-container" class="flex h-10 w-full rounded-lg overflow-hidden border border-slate-300 bg-slate-100"></div>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-600 mb-1">Equivalent Fraction (<span id="strip2-label">1/2</span>):</p>
+                                <div id="strip2-container" class="flex h-10 w-full rounded-lg overflow-hidden border border-slate-300 bg-slate-100"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- SECTION 5: GUIDED PRACTICE -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold">✏️</div>
+                    <div>
+                        <h2 class="font-heading text-xl font-bold text-slate-800">Guided Practice</h2>
+                        <p class="text-xs text-slate-500">Solve each challenge! Use the visual hint button whenever you need help.</p>
+                    </div>
+                </div>
+                <span id="practice-progress" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">Completed: 0/4</span>
+            </div>
+
+            <div class="space-y-6" id="practice-list">
+                <!-- Practice items generated dynamically -->
+            </div>
+        </section>
+
+        <!-- SECTION 6: IB LEARNER PROFILE REFLECTION -->
+        <section class="bg-slate-900 text-white rounded-2xl p-6 shadow-md text-center space-y-4">
+            <div class="inline-block bg-indigo-500/30 text-indigo-300 text-xs px-3 py-1 rounded-full font-medium border border-indigo-400/30">
+                IB Reflection • Reflective & Inquirer
+            </div>
+            <h2 class="font-heading text-xl font-bold">How Is Your Understanding Now?</h2>
+            <p class="text-xs text-slate-300 max-w-lg mx-auto">
+                Remember: equivalent fractions are like wearing different outfits—<b>the appearance changes (different numerator & denominator), but the person (the actual value) stays exactly the same!</b>
+            </p>
+            <div class="flex flex-wrap justify-center gap-3 pt-2">
+                <button onclick="showReflection('Confident!')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
+                    🌟 Super Clear & Confident!
+                </button>
+                <button onclick="showReflection('Need Practice')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
+                    🤔 Need A Bit More Practice
+                </button>
+            </div>
+            <div id="reflection-msg" class="hidden text-xs text-yellow-300 font-semibold pt-2"></div>
+        </section>
+
+    </main>
+
+    <!-- Interactive Script -->
+    <script>
+        // --- DATA WARM-UP ---
+        const warmupData = [
+            { id: 1, num1: 1, den1: 2, num2: 2, den2: 4, correct: '=' },
+            { id: 2, num1: 2, den1: 3, num2: 4, den2: 6, correct: '=' },
+            { id: 3, num1: 3, den1: 5, num2: 4, den2: 5, correct: '<' },
+            { id: 4, num1: 3, den1: 4, num2: 2, den2: 4, correct: '>' }
+        ];
+
+        let warmupScore = 0;
+        const userWarmupAnswers = {};
+
+        function renderWarmup() {
+            const container = document.getElementById('warmup-container');
+            container.innerHTML = '';
+
+            warmupData.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between space-y-3";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-400">Question #${item.id}</span>
+                        <div id="warmup-status-${item.id}" class="text-xs font-bold text-slate-400">Not Answered</div>
+                    </div>
+                    
+                    <div class="flex items-center justify-center space-x-3 my-2">
+                        <!-- Fraction 1 Vertical -->
+                        <div class="v-frac font-bold text-lg text-indigo-700">
+                            <span class="num">${item.num1}</span>
+                            <span class="den">${item.den1}</span>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="flex space-x-1" id="btn-group-${item.id}">
+                            <button onclick="checkWarmup(${item.id}, '<')" class="w-8 h-8 rounded-lg bg-white border border-slate-300 hover:border-indigo-500 font-bold text-slate-700 text-sm shadow-sm transition">&lt;</button>
+                            <button onclick="checkWarmup(${item.id}, '=')" class="w-8 h-8 rounded-lg bg-white border border-slate-300 hover:border-indigo-500 font-bold text-slate-700 text-sm shadow-sm transition">=</button>
+                            <button onclick="checkWarmup(${item.id}, '>')" class="w-8 h-8 rounded-lg bg-white border border-slate-300 hover:border-indigo-500 font-bold text-slate-700 text-sm shadow-sm transition">&gt;</button>
+                        </div>
+
+                        <!-- Fraction 2 Vertical -->
+                        <div class="v-frac font-bold text-lg text-purple-700">
+                            <span class="num">${item.num2}</span>
+                            <span class="den">${item.den2}</span>
+                        </div>
+                    </div>
+
+                    <!-- Visual Mini Bar -->
+                    <div class="space-y-1">
+                        <div class="flex h-2.5 w-full rounded bg-slate-200 overflow-hidden">
+                            ${Array(item.den1).fill(0).map((_, i) => `<div class="h-full border-r border-white ${i < item.num1 ? 'bg-indigo-500' : 'bg-slate-300'}" style="width: ${100/item.den1}%"></div>`).join('')}
+                        </div>
+                        <div class="flex h-2.5 w-full rounded bg-slate-200 overflow-hidden">
+                            ${Array(item.den2).fill(0).map((_, i) => `<div class="h-full border-r border-white ${i < item.num2 ? 'bg-purple-500' : 'bg-slate-300'}" style="width: ${100/item.den2}%"></div>`).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function checkWarmup(id, selected) {
+            const item = warmupData.find(q => q.id === id);
+            const statusEl = document.getElementById(`warmup-status-${id}`);
+            const btnGroup = document.getElementById(`btn-group-${id}`);
+            
+            const isCorrect = (selected === item.correct);
+            userWarmupAnswers[id] = isCorrect;
+
+            const btns = btnGroup.querySelectorAll('button');
+            btns.forEach(btn => {
+                btn.disabled = true;
+                if (btn.innerText === selected) {
+                    btn.className = isCorrect 
+                        ? "w-8 h-8 rounded-lg bg-emerald-500 text-white font-bold text-sm shadow-sm"
+                        : "w-8 h-8 rounded-lg bg-rose-500 text-white font-bold text-sm shadow-sm";
+                } else {
+                    btn.className = "w-8 h-8 rounded-lg bg-slate-100 text-slate-400 font-bold text-sm opacity-50";
+                }
+            });
+
+            if (isCorrect) {
+                statusEl.innerHTML = `<span class="text-emerald-600 font-bold">✓ Correct!</span>`;
+            } else {
+                statusEl.innerHTML = `<span class="text-rose-600 font-bold">✗ Should be '${item.correct}'</span>`;
+            }
+
+            const correctCount = Object.values(userWarmupAnswers).filter(Boolean).length;
+            document.getElementById('warmup-score').innerText = `Score: ${correctCount}/4`;
+        }
+
+
+        // --- SECTION 4: LAB SIMULATOR LOGIC ---
+        let currentBase = { num: 1, den: 2 };
+        let currentMultiplier = 1;
+
+        function initLab() {
+            const select = document.getElementById('base-fraction-select');
+            select.addEventListener('change', (e) => {
+                const parts = e.target.value.split('/');
+                currentBase.num = parseInt(parts[0]);
+                currentBase.den = parseInt(parts[1]);
+                updateLabDisplay();
+            });
+
+            const multBtns = document.querySelectorAll('.mult-btn');
+            multBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    multBtns.forEach(b => {
+                        b.className = "mult-btn px-3 py-1 rounded-lg font-bold text-xs bg-slate-200 text-slate-700 hover:bg-slate-300";
+                    });
+                    btn.className = "mult-btn px-3 py-1 rounded-lg font-bold text-xs bg-indigo-600 text-white shadow-sm";
+                    currentMultiplier = parseInt(btn.getAttribute('data-mult'));
+                    updateLabDisplay();
+                });
+            });
+
+            updateLabDisplay();
+        }
+
+        function updateLabDisplay() {
+            const newNum = currentBase.num * currentMultiplier;
+            const newDen = currentBase.den * currentMultiplier;
+
+            document.getElementById('eq-num1').innerText = currentBase.num;
+            document.getElementById('eq-den1').innerText = currentBase.den;
+            document.getElementById('eq-mult-display').innerText = currentMultiplier;
+            document.getElementById('eq-mult-display2').innerText = currentMultiplier;
+            document.getElementById('eq-num2').innerText = newNum;
+            document.getElementById('eq-den2').innerText = newDen;
+
+            document.getElementById('strip1-label').innerText = `${currentBase.num}/${currentBase.den}`;
+            document.getElementById('strip2-label').innerText = `${newNum}/${newDen}`;
+
+            renderStrip('strip1-container', currentBase.num, currentBase.den, 'bg-indigo-500');
+            renderStrip('strip2-container', newNum, newDen, 'bg-emerald-500');
+        }
+
+        function renderStrip(containerId, num, den, colorClass) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            for (let i = 0; i < den; i++) {
+                const slice = document.createElement('div');
+                slice.style.width = `${100 / den}%`;
+                slice.className = `h-full border-r border-white flex items-center justify-center text-[10px] font-bold text-white transition-all duration-300 ${i < num ? colorClass : 'bg-slate-300 text-slate-500'}`;
+                slice.innerText = `${i+1}`;
+                container.appendChild(slice);
+            }
+        }
+
+
+        // --- SECTION 5: GUIDED PRACTICE DATA & LOGIC ---
+        const practiceData = [
+            {
+                id: 1,
+                title: "Finding the Missing Numerator",
+                question: "Fill in the missing box to make equivalent fractions:",
+                leftNum: 1, leftDen: 3,
+                rightNum: "?", rightDen: 6,
+                mult: 2,
+                answer: 2,
+                hint: "The denominator changed from 3 to 6 (multiplied by 2). So, multiply numerator (1) by 2 as well!"
+            },
+            {
+                id: 2,
+                title: "Finding the Missing Denominator",
+                question: "Fill in the missing box to make equivalent fractions:",
+                leftNum: 2, leftDen: 5,
+                rightNum: 4, rightDen: "?",
+                mult: 2,
+                answer: 10,
+                hint: "The numerator changed from 2 to 4 (multiplied by 2). So, multiply denominator (5) by 2 as well!"
+            },
+            {
+                id: 3,
+                title: "Simplifying Fractions (Division)",
+                question: "Simplify the fraction by dividing top and bottom numbers by 4:",
+                leftNum: 4, leftDen: 8,
+                rightNum: 1, rightDen: "?",
+                mult: null,
+                answer: 2,
+                hint: "Numerator: 4 ÷ 4 = 1. Denominator: 8 ÷ 4 = ?"
+            },
+            {
+                id: 4,
+                title: "IB Real-World Challenge",
+                question: "Anya has a ribbon that is <span class='v-frac font-bold'><span class='num'>3</span><span class='den'>4</span></span> meter long. Chloe has a ribbon that is <span class='v-frac font-bold'><span class='num'>6</span><span class='den'>8</span></span> meter long. Are their ribbons equal in length?",
+                type: "story",
+                options: ["Yes, equal in length", "No, Anya's ribbon is longer", "No, Chloe's ribbon is longer"],
+                answer: "Yes, equal in length",
+                hint: "Multiply both top and bottom of <span class='v-frac font-bold'><span class='num'>3</span><span class='den'>4</span></span> by 2. What fraction do you get?"
+            }
+        ];
+
+        let practiceCompleted = {};
+
+        function renderPractice() {
+            const container = document.getElementById('practice-list');
+            container.innerHTML = '';
+
+            practiceData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4";
+
+                if (item.type === "story") {
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">Challenge #${item.id}</span>
+                                <h3 class="font-bold text-slate-800 text-sm">${item.title}</h3>
+                            </div>
+                            <span id="prac-status-${item.id}" class="text-xs text-slate-400 font-semibold">Not Answered</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed">${item.question}</p>
+                        
+                        <div class="space-y-2" id="story-opts-${item.id}">
+                            ${item.options.map(opt => `
+                                <button onclick="checkStoryAnswer(${item.id}, '${opt}')" class="w-full text-left bg-white border border-slate-200 hover:border-indigo-400 p-3 rounded-lg text-xs font-semibold text-slate-700 transition">
+                                    ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-200">
+                            <button onclick="toggleHint(${item.id})" class="text-xs text-indigo-600 hover:underline font-semibold flex items-center space-x-1">
+                                <span>💡 Visual Hint</span>
+                            </button>
+                        </div>
+
+                        <div id="hint-box-${item.id}" class="hidden bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-800">
+                            ${item.hint}
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">Challenge #${item.id}</span>
+                                <h3 class="font-bold text-slate-800 text-sm">${item.title}</h3>
+                            </div>
+                            <span id="prac-status-${item.id}" class="text-xs text-slate-400 font-semibold">Not Answered</span>
+                        </div>
+                        <p class="text-xs text-slate-600">${item.question}</p>
+
+                        <!-- Fraction Fill Box -->
+                        <div class="flex items-center justify-center space-x-4 bg-white p-4 rounded-xl border border-slate-200 my-2">
+                            <!-- Left Fraction Vertical -->
+                            <div class="v-frac text-lg text-slate-700 font-bold">
+                                <span class="num">${item.leftNum}</span>
+                                <span class="den">${item.leftDen}</span>
+                            </div>
+
+                            <span class="text-xl font-bold text-slate-400">=</span>
+
+                            <!-- Right Fraction Vertical -->
+                            <div class="v-frac text-lg text-indigo-700 font-bold">
+                                ${item.rightNum === '?' 
+                                    ? `<input type="number" id="prac-input-${item.id}" class="w-12 h-9 text-center border-2 border-indigo-400 rounded-lg text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-base mb-1" placeholder="?">`
+                                    : `<span class="num">${item.rightNum}</span>`
+                                }
+                                ${item.rightDen === '?' 
+                                    ? `<input type="number" id="prac-input-${item.id}" class="w-12 h-9 text-center border-2 border-indigo-400 rounded-lg text-indigo-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-base mt-1" placeholder="?">`
+                                    : `<span class="den">${item.rightDen}</span>`
+                                }
+                            </div>
+
+                            <button onclick="checkPracticeAnswer(${item.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2 rounded-lg text-xs shadow-sm transition">
+                                Check
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-200">
+                            <button onclick="toggleHint(${item.id})" class="text-xs text-indigo-600 hover:underline font-semibold flex items-center space-x-1">
+                                <span>💡 Visual Hint</span>
+                            </button>
+                        </div>
+
+                        <div id="hint-box-${item.id}" class="hidden bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-800">
+                            ${item.hint}
+                        </div>
+                    `;
+                }
+
+                container.appendChild(card);
+            });
+        }
+
+        function toggleHint(id) {
+            const hintBox = document.getElementById(`hint-box-${id}`);
+            hintBox.classList.toggle('hidden');
+        }
+
+        function checkPracticeAnswer(id) {
+            const item = practiceData.find(p => p.id === id);
+            const input = document.getElementById(`prac-input-${id}`);
+            const statusEl = document.getElementById(`prac-status-${id}`);
+
+            const val = parseInt(input.value);
+            if (val === item.answer) {
+                statusEl.innerHTML = `<span class="text-emerald-600 font-bold">✓ Correct Answer!</span>`;
+                input.className = "w-12 h-9 text-center border-2 border-emerald-500 bg-emerald-50 rounded-lg text-emerald-800 font-bold text-base my-1";
+                input.disabled = true;
+                practiceCompleted[id] = true;
+            } else {
+                statusEl.innerHTML = `<span class="text-rose-600 font-bold">✗ Try again!</span>`;
+                input.className = "w-12 h-9 text-center border-2 border-rose-500 bg-rose-50 rounded-lg text-rose-800 font-bold text-base my-1";
+            }
+            updatePracticeProgress();
+        }
+
+        function checkStoryAnswer(id, selected) {
+            const item = practiceData.find(p => p.id === id);
+            const statusEl = document.getElementById(`prac-status-${id}`);
+            const optsContainer = document.getElementById(`story-opts-${id}`);
+
+            const btns = optsContainer.querySelectorAll('button');
+            btns.forEach(btn => btn.disabled = true);
+
+            if (selected === item.answer) {
+                statusEl.innerHTML = `<span class="text-emerald-600 font-bold">✓ Exactly Right!</span>`;
+                practiceCompleted[id] = true;
+            } else {
+                statusEl.innerHTML = `<span class="text-rose-600 font-bold">✗ Not quite right</span>`;
+            }
+            updatePracticeProgress();
+        }
+
+        function updatePracticeProgress() {
+            const count = Object.keys(practiceCompleted).length;
+            document.getElementById('practice-progress').innerText = `Completed: ${count}/4`;
+        }
+
+        function showReflection(type) {
+            const msg = document.getElementById('reflection-msg');
+            msg.classList.remove('hidden');
+            if (type === 'Confident!') {
+                msg.innerHTML = "🎉 Awesome job! You have demonstrated true <b>Thinker</b> skills in mastering equivalent fractions!";
+            } else {
+                msg.innerHTML = "💪 Great effort! As an <b>Inquirer</b>, keep experimenting with the live visualizer above!";
+            }
+        }
+
+        // Initialize Everything on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderWarmup();
+            initLab();
+            renderPractice();
+        });
+    </script>
+</body>
+</html>
