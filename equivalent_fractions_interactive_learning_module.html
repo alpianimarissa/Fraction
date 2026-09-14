@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equivalent Fractions - IB PYP Grade 5 Interactive Math</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Fredoka', 'cursive'],
+                    },
+                    colors: {
+                        pyp: {
+                            blue: '#0284c7',
+                            teal: '#0d9488',
+                            orange: '#f97316',
+                            purple: '#8b5cf6',
+                            yellow: '#eab308',
+                            bg: '#f8fafc'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-display { font-family: 'Fredoka', cursive; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .fraction-bar {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .slice-path {
+            transition: fill 0.25s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+        .slice-path:hover {
+            filter: brightness(0.92);
+        }
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            margin: 0 0.2em;
+            line-height: 1.0;
+            font-size: 0.95em;
+        }
+        .frac > .top {
+            border-bottom: 2px solid currentColor;
+            padding: 0 0.25em 0.1em 0.25em;
+            text-align: center;
+            width: 100%;
+            display: block;
+        }
+        .frac > .bottom {
+            padding: 0.1em 0.25em 0 0.25em;
+            text-align: center;
+            width: 100%;
+            display: block;
+        }
+        .frac-input-stack {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            gap: 2px;
+        }
+        .frac-input-stack > input {
+            text-align: center;
+        }
+        .frac-input-stack > .divider {
+            width: 100%;
+            height: 2px;
+            background-color: currentColor;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-teal-100 selection:text-teal-800">
+
+    <!-- Top Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-teal-400 flex items-center justify-center text-white shadow-md shadow-sky-500/20 font-display text-lg font-bold">
+                    <span class="frac text-xs"><span class="top">1</span><span class="bottom">2</span></span>
+                </div>
+                <div>
+                    <h1 class="font-display text-lg font-bold text-slate-900 leading-tight">Equivalent Fractions Lab</h1>
+                    <p class="text-xs text-sky-600 font-semibold uppercase tracking-wider">IB PYP Grade 5 Math</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links for Quick Scroll -->
+            <nav class="hidden md:flex items-center space-x-1 font-medium text-sm">
+                <a href="#objectives" class="px-3 py-2 rounded-lg text-slate-600 hover:text-sky-600 hover:bg-slate-100 transition">Objectives</a>
+                <a href="#warmup" class="px-3 py-2 rounded-lg text-slate-600 hover:text-sky-600 hover:bg-slate-100 transition">Warm-Up</a>
+                <a href="#pizza" class="px-3 py-2 rounded-lg text-slate-600 hover:text-sky-600 hover:bg-slate-100 transition">Pizza Lab</a>
+                <a href="#concept" class="px-3 py-2 rounded-lg text-slate-600 hover:text-sky-600 hover:bg-slate-100 transition">Lessons & Tools</a>
+                <a href="#practice" class="px-3 py-2 rounded-lg text-slate-600 hover:text-sky-600 hover:bg-slate-100 transition">Practice</a>
+            </nav>
+
+            <div class="flex items-center space-x-2">
+                <span id="global-score-badge" class="px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold flex items-center gap-1.5">
+                    <i class="fa-solid fa-star text-amber-500"></i>
+                    <span>Score: <span id="user-stars">0</span>/12</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+        <!-- Hero & IB PYP Banner -->
+        <section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-sky-950 to-teal-950 text-white p-6 sm:p-10 shadow-2xl">
+            <!-- Decorative SVG Circles -->
+            <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute right-1/3 -top-10 w-60 h-60 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="relative z-10 max-w-3xl space-y-4">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-semibold backdrop-blur-md text-sky-200">
+                    <i class="fa-solid fa-compass text-teal-400"></i>
+                    IB PYP Inquiry Strand: Number & Operations
+                </div>
+                
+                <h2 class="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+                    Fractions change their <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-teal-300">Form</span>, not their <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-orange-400">Value</span>.
+                </h2>
+
+                <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
+                    Welcome, young mathematician! Dive into this interactive module to explore how fractions connect, simplify, and represent equivalent quantities in our world.
+                </p>
+
+                <!-- Key Concepts Pills -->
+                <div class="pt-2 flex flex-wrap gap-2 sm:gap-3">
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-2 rounded-xl text-xs sm:text-sm">
+                        <span class="text-sky-300 font-bold">Key Concept 1:</span> <span class="text-white">Form</span> (How is it structured?)
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-2 rounded-xl text-xs sm:text-sm">
+                        <span class="text-amber-300 font-bold">Key Concept 2:</span> <span class="text-white">Equivalence</span> (What does equal mean?)
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 px-3.5 py-2 rounded-xl text-xs sm:text-sm">
+                        <span class="text-teal-300 font-bold">Key Concept 3:</span> <span class="text-white">Relationships</span> (How are quantities connected?)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 1. Learning Objectives -->
+        <section id="objectives" class="scroll-mt-20">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-slate-900">1. Learning Objectives & Statement of Inquiry</h3>
+                        <p class="text-xs text-slate-500">What we are discovering today</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Central Idea Card -->
+                    <div class="bg-gradient-to-br from-sky-50 to-indigo-50/50 rounded-2xl p-5 border border-sky-100 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-sky-600 uppercase tracking-wider">Central Idea</span>
+                            <blockquote class="mt-2 font-display text-lg font-bold text-slate-800 leading-snug">
+                                "Fractions can take different forms without changing their fundamental value."
+                            </blockquote>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-sky-200/50 flex items-center gap-2 text-xs text-sky-700 font-medium">
+                            <i class="fa-solid fa-lightbulb"></i> Think: Why does cutting a cake into more slices not give us more cake?
+                        </div>
+                    </div>
+
+                    <!-- Goals Checklist -->
+                    <div class="space-y-3">
+                        <h4 class="text-sm font-bold uppercase text-slate-400 tracking-wider">By the end of this module, you will be able to:</h4>
+                        <ul class="space-y-2.5 text-sm text-slate-700">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-teal-500 mt-1"></i>
+                                <span><strong>Define & Identify</strong> equivalent fractions using visual models and numbers.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-teal-500 mt-1"></i>
+                                <span><strong>Generate</strong> equivalent fractions using the multiplication and division rule.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-teal-500 mt-1"></i>
+                                <span><strong>Simplify</strong> fractions to their lowest terms using the Highest Common Factor (HCF).</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-circle-check text-teal-500 mt-1"></i>
+                                <span><strong>Apply</strong> equivalent fractions to solve real-world IB inquiry problems.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Warm-Up Activity (Interactive) -->
+        <section id="warmup" class="scroll-mt-20">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 flex-wrap gap-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-fire"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-xl font-bold text-slate-900">2. Warm-Up Challenge (4 Diagnostic Questions)</h3>
+                            <p class="text-xs text-slate-500">Test your prior knowledge before diving in!</p>
+                        </div>
+                    </div>
+                    <button onclick="resetWarmup()" class="text-xs text-slate-500 hover:text-slate-800 underline flex items-center gap-1">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Warm-Up
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Warmup Q1 -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-bold">Q1: Vocabulary</span>
+                                <span id="q1-status" class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-circle"></i> Not answered</span>
+                            </div>
+                            <p class="mt-3 text-sm font-semibold text-slate-800">
+                                In the fraction <span class="inline-block px-2 py-1 bg-white border border-slate-200 rounded font-bold text-sky-600 font-mono"><span class="frac"><span class="top">3</span><span class="bottom">8</span></span></span>, what is the number <strong class="text-amber-600">3</strong> called, and what does <strong class="text-amber-600">8</strong> represent?
+                            </p>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <label class="block text-slate-500 mb-1 font-semibold">Number 3 is the:</label>
+                                    <select id="w1-num" class="w-full bg-white border border-slate-300 rounded-lg p-2 text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none">
+                                        <option value="">Select...</option>
+                                        <option value="denominator">Denominator</option>
+                                        <option value="numerator">Numerator</option>
+                                        <option value="quotient">Quotient</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-slate-500 mb-1 font-semibold">Number 8 represents:</label>
+                                    <select id="w1-den" class="w-full bg-white border border-slate-300 rounded-lg p-2 text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none">
+                                        <option value="">Select...</option>
+                                        <option value="parts">Total equal parts (Denominator)</option>
+                                        <option value="parts_taken">Parts taken (Numerator)</option>
+                                        <option value="multiplier">Multiplier</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button onclick="checkWarmup1()" class="w-full mt-2 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">Check Q1 Answer</button>
+                            <div id="w1-feedback" class="hidden text-xs p-2.5 rounded-lg"></div>
+                        </div>
+                    </div>
+
+                    <!-- Warmup Q2 -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-bold">Q2: Visual Fraction</span>
+                                <span id="q2-status" class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-circle"></i> Not answered</span>
+                            </div>
+                            <p class="mt-3 text-sm font-semibold text-slate-800">
+                                A chocolate bar is divided into <strong class="text-amber-600">4 equal pieces</strong>. If you eat <strong class="text-amber-600">2 pieces</strong>, what fraction did you eat?
+                            </p>
+                            <!-- Mini interactive chocolate bar visual -->
+                            <div class="mt-3 grid grid-cols-4 gap-1 bg-amber-950 p-2 rounded-lg border-2 border-amber-900">
+                                <div id="choc-0" onclick="toggleChoc(0)" class="h-8 bg-amber-600 rounded cursor-pointer transition hover:opacity-80 flex items-center justify-center text-xs text-amber-100 font-bold">1</div>
+                                <div id="choc-1" onclick="toggleChoc(1)" class="h-8 bg-amber-600 rounded cursor-pointer transition hover:opacity-80 flex items-center justify-center text-xs text-amber-100 font-bold">2</div>
+                                <div id="choc-2" onclick="toggleChoc(2)" class="h-8 bg-amber-900 rounded cursor-pointer transition hover:opacity-80 flex items-center justify-center text-xs text-amber-300 font-bold">3</div>
+                                <div id="choc-3" onclick="toggleChoc(3)" class="h-8 bg-amber-900 rounded cursor-pointer transition hover:opacity-80 flex items-center justify-center text-xs text-amber-300 font-bold">4</div>
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-1 italic text-center">Click slices to shade/unshade!</p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-semibold text-slate-600">Your Fraction Answer:</span>
+                                <input type="text" id="w2-input" placeholder="e.g. 2/4" class="flex-1 bg-white border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none text-center">
+                            </div>
+                            <button onclick="checkWarmup2()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">Check Q2 Answer</button>
+                            <div id="w2-feedback" class="hidden text-xs p-2.5 rounded-lg"></div>
+                        </div>
+                    </div>
+
+                    <!-- Warmup Q3 -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-bold">Q3: Fraction of a Set</span>
+                                <span id="q3-status" class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-circle"></i> Not answered</span>
+                            </div>
+                            <p class="mt-3 text-sm font-semibold text-slate-800">
+                                What is <span class="inline-block px-2 py-1 bg-white border border-slate-200 rounded font-bold text-sky-600 font-mono"><span class="frac"><span class="top">1</span><span class="bottom">3</span></span></span> of <strong>12 apples</strong>? 🍎
+                            </p>
+                            <!-- Visual Apple Grid -->
+                            <div class="mt-3 flex flex-wrap justify-center gap-2 text-lg">
+                                <span>🍎</span><span>🍎</span><span>🍎</span><span>🍎</span>
+                                <span class="text-slate-300">|</span>
+                                <span>🍎</span><span>🍎</span><span>🍎</span><span>🍎</span>
+                                <span class="text-slate-300">|</span>
+                                <span>🍎</span><span>🍎</span><span>🍎</span><span>🍎</span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-semibold text-slate-600">Number of apples:</span>
+                                <input type="number" id="w3-input" placeholder="0" class="flex-1 bg-white border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-800 focus:ring-2 focus:ring-sky-500 outline-none text-center">
+                            </div>
+                            <button onclick="checkWarmup3()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">Check Q3 Answer</button>
+                            <div id="w3-feedback" class="hidden text-xs p-2.5 rounded-lg"></div>
+                        </div>
+                    </div>
+
+                    <!-- Warmup Q4 -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <span class="px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-xs font-bold">Q4: Visual Comparison</span>
+                                <span id="q4-status" class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-circle"></i> Not answered</span>
+                            </div>
+                            <p class="mt-3 text-sm font-semibold text-slate-800">
+                                Which fraction is larger: <span class="inline-block px-2 py-1 bg-white border border-slate-200 rounded font-bold text-sky-600 font-mono"><span class="frac"><span class="top">1</span><span class="bottom">2</span></span></span> or <span class="inline-block px-2 py-1 bg-white border border-slate-200 rounded font-bold text-sky-600 font-mono"><span class="frac"><span class="top">1</span><span class="bottom">4</span></span></span>?
+                            </p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="selectQ4('1/2')" id="btn-q4-half" class="py-3 px-4 rounded-xl border-2 border-slate-200 bg-white hover:border-sky-500 font-bold text-slate-700 text-sm transition flex items-center justify-center gap-1">
+                                    <span class="frac"><span class="top">1</span><span class="bottom">2</span></span> is Larger
+                                </button>
+                                <button onclick="selectQ4('1/4')" id="btn-q4-quarter" class="py-3 px-4 rounded-xl border-2 border-slate-200 bg-white hover:border-sky-500 font-bold text-slate-700 text-sm transition flex items-center justify-center gap-1">
+                                    <span class="frac"><span class="top">1</span><span class="bottom">4</span></span> is Larger
+                                </button>
+                            </div>
+                            <button onclick="checkWarmup4()" class="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition">Check Q4 Answer</button>
+                            <div id="w4-feedback" class="hidden text-xs p-2.5 rounded-lg"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Real-World Connection: The Pizza Party Simulator -->
+        <section id="pizza" class="scroll-mt-20">
+            <div class="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-rose-500/10 rounded-3xl p-6 sm:p-10 border border-orange-200 shadow-md space-y-8">
+                
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-bold text-2xl shadow-md shadow-orange-500/30">
+                        🍕
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-orange-600">Real-World Context</span>
+                        <h3 class="font-display text-2xl font-bold text-slate-900">3. The Pizza Party Dilemma 🍕</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Scenario Narrative -->
+                    <div class="lg:col-span-5 space-y-4">
+                        <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-5 border border-orange-100 shadow-sm space-y-3">
+                            <h4 class="font-display text-lg font-bold text-slate-900 flex items-center gap-2">
+                                <span>Maya's Pizza vs. Your Pizza</span>
+                            </h4>
+                            <p class="text-sm text-slate-600 leading-relaxed">
+                                Imagine you and your friend Maya order personal pizzas of the exact same size.
+                            </p>
+                            <ul class="text-xs space-y-2 text-slate-700">
+                                <li class="p-2 bg-rose-50 border border-rose-100 rounded-lg flex items-center justify-between">
+                                    <span><strong class="text-rose-700">Maya's Pizza:</strong> Cut into <strong>2 equal slices</strong>. She ate <strong>1 slice</strong>.</span>
+                                    <span class="font-mono font-bold bg-white px-2 py-0.5 rounded border border-rose-200"><span class="frac"><span class="top">1</span><span class="bottom">2</span></span></span>
+                                </li>
+                                <li class="p-2 bg-amber-50 border border-amber-100 rounded-lg flex items-center justify-between">
+                                    <span><strong class="text-amber-700">Your Pizza:</strong> Cut into <strong>4 equal slices</strong>. You ate <strong>2 slices</strong>.</span>
+                                    <span class="font-mono font-bold bg-white px-2 py-0.5 rounded border border-amber-200"><span class="frac"><span class="top">2</span><span class="bottom">4</span></span></span>
+                                </li>
+                            </ul>
+                            
+                            <div class="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs text-teal-800">
+                                <i class="fa-solid fa-circle-question text-teal-600 mr-1"></i>
+                                <strong>Inquiry Question:</strong> Did you eat more pizza than Maya, or did you eat the exact same amount?
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Pizza Comparison Visualizer -->
+                    <div class="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6">
+                        <h4 class="text-center font-display text-base font-bold text-slate-800">
+                            Interactive Slice Inspector
+                        </h4>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-center justify-items-center">
+                            
+                            <!-- Maya Pizza SVG -->
+                            <div class="text-center space-y-2">
+                                <span class="text-xs font-bold text-rose-600 uppercase tracking-wider block">Maya (<span class="frac"><span class="top">1</span><span class="bottom">2</span></span> Eaten)</span>
+                                <div class="relative w-40 h-40">
+                                    <svg id="maya-pizza-svg" viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+                                        <!-- Slice 1 Eaten -->
+                                        <path d="M 50 50 L 50 2 A 48 48 0 0 1 50 98 Z" fill="#f97316" stroke="#ffffff" stroke-width="2"/>
+                                        <!-- Slice 2 Un-eaten -->
+                                        <path d="M 50 50 L 50 98 A 48 48 0 0 1 50 2 Z" fill="#fef3c7" stroke="#ffffff" stroke-width="2"/>
+                                        <!-- Crust circle -->
+                                        <circle cx="50" cy="50" r="48" fill="none" stroke="#d97706" stroke-width="4"/>
+                                    </svg>
+                                </div>
+                                <div class="text-xs font-bold text-slate-700 flex items-center justify-center gap-1">
+                                    <span>Eaten:</span>
+                                    <span class="text-orange-600 font-mono text-sm inline-block"><span class="frac"><span class="top">1</span><span class="bottom">2</span></span></span>
+                                    <span>(50%)</span>
+                                </div>
+                            </div>
+
+                            <!-- Custom Interactive Pizza SVG -->
+                            <div class="text-center space-y-2">
+                                <span class="text-xs font-bold text-sky-600 uppercase tracking-wider block">Your Pizza Simulator</span>
+                                <div class="relative w-40 h-40">
+                                    <svg id="custom-pizza-svg" viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+                                        <!-- Dynamic paths rendered via JS -->
+                                    </svg>
+                                </div>
+                                <div class="text-xs font-bold text-slate-700 flex items-center justify-center gap-1">
+                                    <span>Eaten:</span>
+                                    <span id="custom-fraction-text" class="text-sky-600 font-mono text-sm inline-block"><span class="frac"><span class="top">2</span><span class="bottom">4</span></span></span> 
+                                    <span>(<span id="custom-percent-text">50%</span>)</span>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Controls -->
+                        <div class="pt-4 border-t border-slate-100 space-y-3">
+                            <div class="flex items-center justify-between gap-4">
+                                <label class="text-xs font-bold text-slate-600">Total Slices (Denominator): <span id="slices-count-label" class="text-sky-600 font-mono">4</span></label>
+                                <input type="range" id="pizza-slices-slider" min="2" max="12" step="2" value="4" class="w-1/2 accent-sky-500 cursor-pointer" oninput="updatePizzaSimulator()">
+                            </div>
+                            <div class="flex items-center justify-between gap-4">
+                                <label class="text-xs font-bold text-slate-600">Slices Eaten (Numerator): <span id="eaten-count-label" class="text-sky-600 font-mono">2</span></label>
+                                <input type="range" id="pizza-eaten-slider" min="0" max="4" step="1" value="2" class="w-1/2 accent-orange-500 cursor-pointer" oninput="updatePizzaSimulator()">
+                            </div>
+
+                            <!-- Equivalence Verdict Banner -->
+                            <div id="pizza-verdict" class="p-3 rounded-xl text-center text-xs font-bold transition">
+                                <!-- Dynamic JS verdict -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 4. Comprehensive Material & Interactive Tools -->
+        <section id="concept" class="scroll-mt-20 space-y-8">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-8">
+                
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-slate-900">4. Comprehensive Material & Method Workbench</h3>
+                        <p class="text-xs text-slate-500">Master the Golden Rules of Equivalent Fractions</p>
+                    </div>
+                </div>
+
+                <!-- Explanation Tabs / Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Method 1: Multiplication Rule -->
+                    <div class="bg-gradient-to-br from-sky-50 to-blue-50/60 rounded-2xl p-6 border border-sky-100 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-sky-600 text-white rounded-lg text-xs font-bold uppercase tracking-wider">
+                            Method 1: Multiplication Rule
+                        </div>
+                        <h4 class="font-display text-lg font-bold text-slate-900">Generating Equivalent Fractions</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            To find an equivalent fraction, <strong>multiply</strong> both the top number (numerator) and the bottom number (denominator) by the <strong>same non-zero number ($n$)</strong>.
+                        </p>
+
+                        <!-- Math Formula Box with Vertical Fraction -->
+                        <div class="bg-white rounded-xl p-4 flex items-center justify-center gap-3 border border-sky-200 shadow-xs font-mono font-bold text-sky-900 text-base">
+                            <span class="frac text-slate-600"><span class="top">a</span><span class="bottom">b</span></span>
+                            <span>=</span>
+                            <span class="frac text-sky-600"><span class="top">a × n</span><span class="bottom">b × n</span></span>
+                        </div>
+
+                        <div class="text-xs space-y-1.5 text-slate-700 bg-white/60 p-3 rounded-xl border border-sky-100">
+                            <p class="font-bold text-sky-800">📝 Worked Example:</p>
+                            <p class="flex items-center gap-1">Start with <span class="frac font-bold"><span class="top">2</span><span class="bottom">3</span></span>:</p>
+                            <ul class="space-y-2 text-slate-600 font-mono">
+                                <li class="flex items-center gap-2">
+                                    <span>• Multiply by 2 &rarr;</span>
+                                    <span class="frac"><span class="top">2 × 2</span><span class="bottom">3 × 2</span></span>
+                                    <span>=</span>
+                                    <span class="frac font-bold text-sky-700"><span class="top">4</span><span class="bottom">6</span></span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span>• Multiply by 5 &rarr;</span>
+                                    <span class="frac"><span class="top">2 × 5</span><span class="bottom">3 × 5</span></span>
+                                    <span>=</span>
+                                    <span class="frac font-bold text-sky-700"><span class="top">10</span><span class="bottom">15</span></span>
+                                </li>
+                                <li class="flex items-center gap-2">
+                                    <span>• Multiply by 10 &rarr;</span>
+                                    <span class="frac"><span class="top">2 × 10</span><span class="bottom">3 × 10</span></span>
+                                    <span>=</span>
+                                    <span class="frac font-bold text-sky-700"><span class="top">20</span><span class="bottom">30</span></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Method 2: Division Rule -->
+                    <div class="bg-gradient-to-br from-teal-50 to-emerald-50/60 rounded-2xl p-6 border border-teal-100 space-y-4">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-teal-600 text-white rounded-lg text-xs font-bold uppercase tracking-wider">
+                            Method 2: Division Rule
+                        </div>
+                        <h4 class="font-display text-lg font-bold text-slate-900">Simplifying Fractions (Lowest Terms)</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            To simplify a fraction to its lowest terms, <strong>divide</strong> both the numerator and denominator by their <strong>Highest Common Factor (HCF)</strong>.
+                        </p>
+
+                        <!-- Math Formula Box with Vertical Fraction -->
+                        <div class="bg-white rounded-xl p-4 flex items-center justify-center gap-3 border border-teal-200 shadow-xs font-mono font-bold text-teal-900 text-base">
+                            <span class="frac text-slate-600"><span class="top">a</span><span class="bottom">b</span></span>
+                            <span>=</span>
+                            <span class="frac text-teal-600"><span class="top">a ÷ HCF</span><span class="bottom">b ÷ HCF</span></span>
+                        </div>
+
+                        <div class="text-xs space-y-1.5 text-slate-700 bg-white/60 p-3 rounded-xl border border-teal-100">
+                            <p class="font-bold text-teal-800">📝 Worked Example:</p>
+                            <p class="flex items-center gap-1">Simplify <span class="frac font-bold"><span class="top">12</span><span class="bottom">18</span></span>:</p>
+                            <ul class="list-disc list-inside space-y-1 text-slate-600">
+                                <li>Factors of 12: 1, 2, 3, 4, <strong class="text-teal-700">6</strong>, 12</li>
+                                <li>Factors of 18: 1, 2, 3, <strong class="text-teal-700">6</strong>, 9, 18</li>
+                                <li class="flex items-center gap-1">
+                                    <span>Divide both by <strong>HCF = 6</strong> &rarr;</span>
+                                    <span class="frac font-bold text-teal-700 font-mono"><span class="top">2</span><span class="bottom">3</span></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Interactive Fraction Workbench Tool -->
+                <div class="bg-slate-900 rounded-3xl p-6 sm:p-8 text-white space-y-6 shadow-xl">
+                    <div class="flex items-center justify-between flex-wrap gap-3">
+                        <div>
+                            <span class="text-xs font-bold text-sky-400 uppercase tracking-wider"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Interactive Workbench</span>
+                            <h4 class="font-display text-xl font-bold text-white">Fraction Multiplier & Simplifier Studio</h4>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="switchStudioMode('multiply')" id="tab-btn-mult" class="px-4 py-2 rounded-xl text-xs font-bold bg-sky-500 text-white transition">Multiplier</button>
+                            <button onclick="switchStudioMode('simplify')" id="tab-btn-simp" class="px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-slate-300 transition">Simplifier</button>
+                        </div>
+                    </div>
+
+                    <!-- Multiplier Tool Panel -->
+                    <div id="studio-multiplier" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-2 font-semibold">Base Fraction:</label>
+                                <div class="frac-input-stack">
+                                    <input type="number" id="mult-num" value="3" min="1" max="20" class="w-16 bg-white/10 border border-white/20 text-white rounded-lg p-1.5 text-center font-bold text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" onchange="runMultiplier()">
+                                    <div class="divider"></div>
+                                    <input type="number" id="mult-den" value="4" min="1" max="20" class="w-16 bg-white/10 border border-white/20 text-white rounded-lg p-1.5 text-center font-bold text-sm focus:outline-none focus:ring-2 focus:ring-sky-400" onchange="runMultiplier()">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1 font-semibold">Multiply Both By ($n$):</label>
+                                <input type="range" id="mult-factor" min="2" max="10" value="3" class="w-full accent-sky-400 cursor-pointer" oninput="runMultiplier()">
+                                <div class="text-center text-xs text-sky-300 font-bold mt-1">Multiplier = <span id="mult-factor-val">3</span></div>
+                            </div>
+
+                            <div class="text-center bg-sky-500/20 rounded-xl p-3 border border-sky-400/30">
+                                <span class="text-xs text-sky-200 block font-semibold mb-1">Resulting Equivalent Fraction</span>
+                                <div id="mult-result" class="font-display text-2xl font-bold text-sky-300 inline-block">
+                                    <span class="frac"><span class="top">9</span><span class="bottom">12</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visual Fraction Strip Comparison -->
+                        <div class="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block">Visual Strip Comparison:</span>
+                            
+                            <!-- Strip 1 -->
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center text-xs text-slate-300 font-mono">
+                                    <span class="flex items-center gap-1">Original: <span id="mult-strip1-label"><span class="frac"><span class="top">3</span><span class="bottom">4</span></span></span></span>
+                                </div>
+                                <div id="mult-strip-1" class="h-8 w-full bg-slate-800 rounded-lg overflow-hidden flex border border-white/10">
+                                    <!-- Dynamic Blocks -->
+                                </div>
+                            </div>
+
+                            <!-- Strip 2 -->
+                            <div class="space-y-1">
+                                <div class="flex justify-between items-center text-xs text-sky-300 font-mono">
+                                    <span class="flex items-center gap-1">Scaled: <span id="mult-strip2-label"><span class="frac"><span class="top">9</span><span class="bottom">12</span></span></span></span>
+                                </div>
+                                <div id="mult-strip-2" class="h-8 w-full bg-slate-800 rounded-lg overflow-hidden flex border border-sky-400/30">
+                                    <!-- Dynamic Blocks -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Simplifier Tool Panel (Hidden by default) -->
+                    <div id="studio-simplifier" class="hidden space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-2 font-semibold">Fraction to Simplify:</label>
+                                <div class="frac-input-stack">
+                                    <input type="number" id="simp-num" value="12" min="1" max="100" class="w-16 bg-white/10 border border-white/20 text-white rounded-lg p-1.5 text-center font-bold text-sm focus:outline-none focus:ring-2 focus:ring-teal-400" onchange="runSimplifier()">
+                                    <div class="divider"></div>
+                                    <input type="number" id="simp-den" value="18" min="1" max="100" class="w-16 bg-white/10 border border-white/20 text-white rounded-lg p-1.5 text-center font-bold text-sm focus:outline-none focus:ring-2 focus:ring-teal-400" onchange="runSimplifier()">
+                                </div>
+                            </div>
+
+                            <div class="text-center sm:text-left">
+                                <button onclick="runSimplifier()" class="px-4 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-xl text-xs font-bold transition shadow-md shadow-teal-500/20">
+                                    <i class="fa-solid fa-calculator mr-1"></i> Calculate HCF & Simplify
+                                </button>
+                            </div>
+
+                            <div class="text-center bg-teal-500/20 rounded-xl p-3 border border-teal-400/30">
+                                <span class="text-xs text-teal-200 block font-semibold mb-1">Simplest Form</span>
+                                <div id="simp-result" class="font-display text-2xl font-bold text-teal-300 inline-block">
+                                    <span class="frac"><span class="top">2</span><span class="bottom">3</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step By Step Analysis -->
+                        <div id="simp-steps-box" class="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-2 text-xs text-slate-300 font-mono">
+                            <!-- Dynamic Step Breakdown -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 5. Guided Practice Tasks -->
+        <section id="practice" class="scroll-mt-20">
+            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-8">
+                
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4 flex-wrap gap-2">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-pen-ruler"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-display text-xl font-bold text-slate-900">5. Guided Practice & Real-World Inquiry</h3>
+                            <p class="text-xs text-slate-500">Put your skills to the test with interactive tasks</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task 1: Fill in the Missing Value -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-md bg-sky-100 text-sky-800 text-xs font-bold">Task 1</span>
+                        <h4 class="font-display text-base font-bold text-slate-800">Fill in the Missing Equivalent Values</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Box 1 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <div class="text-sm font-bold text-slate-700 font-mono flex items-center justify-center gap-2">
+                                <span class="frac"><span class="top">1</span><span class="bottom">4</span></span>
+                                <span>=</span>
+                                <div class="frac-input-stack">
+                                    <input type="number" id="t1-1" class="w-12 text-center p-1 border border-slate-300 rounded text-sky-600 font-bold text-xs" placeholder="?">
+                                    <div class="divider"></div>
+                                    <span class="text-xs">12</span>
+                                </div>
+                            </div>
+                            <button onclick="checkTask1Item('t1-1', 3, 'fb-t1-1')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold w-full transition">Check</button>
+                            <div id="fb-t1-1" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+
+                        <!-- Box 2 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <div class="text-sm font-bold text-slate-700 font-mono flex items-center justify-center gap-2">
+                                <span class="frac"><span class="top">3</span><span class="bottom">5</span></span>
+                                <span>=</span>
+                                <div class="frac-input-stack">
+                                    <span class="text-xs">15</span>
+                                    <div class="divider"></div>
+                                    <input type="number" id="t1-2" class="w-12 text-center p-1 border border-slate-300 rounded text-sky-600 font-bold text-xs" placeholder="?">
+                                </div>
+                            </div>
+                            <button onclick="checkTask1Item('t1-2', 25, 'fb-t1-2')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold w-full transition">Check</button>
+                            <div id="fb-t1-2" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+
+                        <!-- Box 3 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <div class="text-sm font-bold text-slate-700 font-mono flex items-center justify-center gap-2">
+                                <span class="frac"><span class="top">20</span><span class="bottom">25</span></span>
+                                <span>=</span>
+                                <div class="frac-input-stack">
+                                    <span class="text-xs">4</span>
+                                    <div class="divider"></div>
+                                    <input type="number" id="t1-3" class="w-12 text-center p-1 border border-slate-300 rounded text-sky-600 font-bold text-xs" placeholder="?">
+                                </div>
+                            </div>
+                            <button onclick="checkTask1Item('t1-3', 5, 'fb-t1-3')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold w-full transition">Check</button>
+                            <div id="fb-t1-3" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+
+                        <!-- Box 4 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <div class="text-sm font-bold text-slate-700 font-mono flex items-center justify-center gap-2">
+                                <div class="frac-input-stack">
+                                    <input type="number" id="t1-4" class="w-12 text-center p-1 border border-slate-300 rounded text-sky-600 font-bold text-xs" placeholder="?">
+                                    <div class="divider"></div>
+                                    <span class="text-xs">16</span>
+                                </div>
+                                <span>=</span>
+                                <span class="frac"><span class="top">3</span><span class="bottom">4</span></span>
+                            </div>
+                            <button onclick="checkTask1Item('t1-4', 12, 'fb-t1-4')" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold w-full transition">Check</button>
+                            <div id="fb-t1-4" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task 2: Simplification Challenge -->
+                <div class="space-y-4 pt-4 border-t border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-md bg-teal-100 text-teal-800 text-xs font-bold">Task 2</span>
+                        <h4 class="font-display text-base font-bold text-slate-800">Simplification Challenge (Lowest Terms)</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Simplification 1 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <p class="text-xs font-bold text-slate-500 flex items-center justify-center gap-1">
+                                Simplify: <span class="text-slate-800 font-mono font-bold text-sm"><span class="frac"><span class="top">8</span><span class="bottom">12</span></span></span>
+                            </p>
+                            <div class="flex items-center justify-center font-mono font-bold text-sm">
+                                <div class="frac-input-stack">
+                                    <input type="number" id="t2-1-n" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="num">
+                                    <div class="divider"></div>
+                                    <input type="number" id="t2-1-d" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="den">
+                                </div>
+                            </div>
+                            <button onclick="checkSimplification('t2-1-n', 't2-1-d', 2, 3, 'fb-t2-1')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold w-full transition">Submit</button>
+                            <div id="fb-t2-1" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+
+                        <!-- Simplification 2 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <p class="text-xs font-bold text-slate-500 flex items-center justify-center gap-1">
+                                Simplify: <span class="text-slate-800 font-mono font-bold text-sm"><span class="frac"><span class="top">15</span><span class="bottom">20</span></span></span>
+                            </p>
+                            <div class="flex items-center justify-center font-mono font-bold text-sm">
+                                <div class="frac-input-stack">
+                                    <input type="number" id="t2-2-n" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="num">
+                                    <div class="divider"></div>
+                                    <input type="number" id="t2-2-d" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="den">
+                                </div>
+                            </div>
+                            <button onclick="checkSimplification('t2-2-n', 't2-2-d', 3, 4, 'fb-t2-2')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold w-full transition">Submit</button>
+                            <div id="fb-t2-2" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+
+                        <!-- Simplification 3 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <p class="text-xs font-bold text-slate-500 flex items-center justify-center gap-1">
+                                Simplify: <span class="text-slate-800 font-mono font-bold text-sm"><span class="frac"><span class="top">14</span><span class="bottom">21</span></span></span>
+                            </p>
+                            <div class="flex items-center justify-center font-mono font-bold text-sm">
+                                <div class="frac-input-stack">
+                                    <input type="number" id="t2-3-n" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="num">
+                                    <div class="divider"></div>
+                                    <input type="number" id="t2-3-d" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="den">
+                                </div>
+                            </div>
+                            <button onclick="checkSimplification('t2-3-n', 't2-3-d', 2, 3, 'fb-t2-3')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold w-full transition">Submit</button>
+                            <div id="fb-t2-3" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+
+                        <!-- Simplification 4 -->
+                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-3">
+                            <p class="text-xs font-bold text-slate-500 flex items-center justify-center gap-1">
+                                Simplify: <span class="text-slate-800 font-mono font-bold text-sm"><span class="frac"><span class="top">24</span><span class="bottom">36</span></span></span>
+                            </p>
+                            <div class="flex items-center justify-center font-mono font-bold text-sm">
+                                <div class="frac-input-stack">
+                                    <input type="number" id="t2-4-n" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="num">
+                                    <div class="divider"></div>
+                                    <input type="number" id="t2-4-d" class="w-12 text-center p-1 border border-slate-300 rounded text-teal-600 text-xs" placeholder="den">
+                                </div>
+                            </div>
+                            <button onclick="checkSimplification('t2-4-n', 't2-4-d', 2, 3, 'fb-t2-4')" class="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold w-full transition">Submit</button>
+                            <div id="fb-t2-4" class="hidden text-[11px] p-1.5 rounded font-semibold"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Task 3: Real-World Garden Inquiry Scenario -->
+                <div class="space-y-4 pt-4 border-t border-slate-100">
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold">Task 3: Inquiry Problem 🕵️‍♂️</span>
+                        <h4 class="font-display text-base font-bold text-slate-800">The School Sunflower Garden Project</h4>
+                    </div>
+
+                    <div class="bg-emerald-50/50 rounded-2xl p-5 border border-emerald-100 space-y-4">
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            Three student groups are planting sunflower seeds in identical school garden beds:
+                        </p>
+                        
+                        <!-- Garden Bed Visualizers -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <!-- Group Alpha -->
+                            <div class="bg-white p-3 rounded-xl border border-emerald-200 space-y-2">
+                                <div class="flex justify-between text-xs font-bold items-center">
+                                    <span class="text-emerald-800">Group Alpha</span>
+                                    <span class="font-mono text-emerald-600"><span class="frac"><span class="top">6</span><span class="bottom">10</span></span></span>
+                                </div>
+                                <div class="h-6 bg-slate-100 rounded flex overflow-hidden border border-slate-200">
+                                    <div class="h-full bg-emerald-500" style="width: 60%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Group Beta -->
+                            <div class="bg-white p-3 rounded-xl border border-emerald-200 space-y-2">
+                                <div class="flex justify-between text-xs font-bold items-center">
+                                    <span class="text-emerald-800">Group Beta</span>
+                                    <span class="font-mono text-emerald-600"><span class="frac"><span class="top">12</span><span class="bottom">20</span></span></span>
+                                </div>
+                                <div class="h-6 bg-slate-100 rounded flex overflow-hidden border border-slate-200">
+                                    <div class="h-full bg-emerald-500" style="width: 60%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Group Gamma -->
+                            <div class="bg-white p-3 rounded-xl border border-emerald-200 space-y-2">
+                                <div class="flex justify-between text-xs font-bold items-center">
+                                    <span class="text-emerald-800">Group Gamma</span>
+                                    <span class="font-mono text-emerald-600"><span class="frac"><span class="top">3</span><span class="bottom">5</span></span></span>
+                                </div>
+                                <div class="h-6 bg-slate-100 rounded flex overflow-hidden border border-slate-200">
+                                    <div class="h-full bg-emerald-500" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Questions for Garden Task -->
+                        <div class="space-y-4 pt-2">
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-800">
+                                    Question A: Are all three groups covering the exact same amount of garden space?
+                                </label>
+                                <div class="flex items-center gap-4 text-xs font-semibold">
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="radio" name="garden-qa" value="yes" class="accent-emerald-600"> Yes, they are equal
+                                    </label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="radio" name="garden-qa" value="no" class="accent-emerald-600"> No, they are different
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-800">
+                                    Question B: Which group expressed their garden fraction in its <u>simplest form</u>? Explain using IB Key Concept terminology (<em class="text-emerald-700">Form</em> or <em class="text-emerald-700">Equivalence</em>).
+                                </label>
+                                <textarea id="garden-qb-text" rows="3" placeholder="Write your mathematical reasoning here..." class="w-full bg-white border border-slate-300 rounded-xl p-3 text-xs text-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none"></textarea>
+                            </div>
+
+                            <button onclick="checkTask3Inquiry()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-emerald-600/20">
+                                <i class="fa-solid fa-paper-plane mr-1"></i> Submit Inquiry Reasoning
+                            </button>
+                            <div id="fb-t3-inquiry" class="hidden text-xs p-3 rounded-xl"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Reflection & Self Assessment -->
+        <section id="reflection" class="scroll-mt-20">
+            <div class="bg-gradient-to-br from-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+                <div class="flex items-center gap-3 border-b border-white/10 pb-4">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 border border-indigo-400/30 flex items-center justify-center font-bold text-lg">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display text-xl font-bold text-white">IB PYP Reflection & Self-Assessment</h3>
+                        <p class="text-xs text-slate-400">Evaluate your understanding of equivalence</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Checklist -->
+                    <div class="space-y-3">
+                        <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block">Self-Check:</span>
+                        <label class="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition text-xs">
+                            <input type="checkbox" class="w-4 h-4 rounded accent-teal-400">
+                            <span>I can explain what equivalent fractions mean in my own words.</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition text-xs">
+                            <input type="checkbox" class="w-4 h-4 rounded accent-teal-400">
+                            <span>I know how to use multiplication and division to find equivalent fractions.</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 bg-white/5 border border-white/10 rounded-xl cursor-pointer hover:bg-white/10 transition text-xs">
+                            <input type="checkbox" class="w-4 h-4 rounded accent-teal-400">
+                            <span>I can calculate the HCF to simplify fractions to their lowest terms.</span>
+                        </label>
+                    </div>
+
+                    <!-- Final Reflection Input -->
+                    <div class="space-y-3 flex flex-col justify-between">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider block">Metacognitive Prompt:</span>
+                            <p class="text-xs text-slate-300 mt-1">
+                                Which strategy worked best for you when finding equivalent fractions? Visual pizza models, multiplication rules, or division with HCF?
+                            </p>
+                            <textarea id="final-reflection" rows="3" class="mt-2 w-full bg-white/10 border border-white/20 rounded-xl p-3 text-xs text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Type your reflection here..."></textarea>
+                        </div>
+                        <button onclick="saveReflection()" class="py-2.5 px-4 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl text-xs font-bold transition">
+                            Save Reflection & Finish Module 🎉
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© Interactive IB PYP Math Module — Grade 5 Number & Operations: Equivalent Fractions.</p>
+        </div>
+    </footer>
+
+    <!-- Application JavaScript Logic -->
+    <script>
+        function formatFrac(num, den) {
+            return `<span class="frac"><span class="top">${num}</span><span class="bottom">${den}</span></span>`;
+        }
+
+        // Score State Tracking
+        const solvedState = {
+            w1: false, w2: false, w3: false, w4: false,
+            t1_1: false, t1_2: false, t1_3: false, t1_4: false,
+            t2_1: false, t2_2: false, t2_3: false, t2_4: false
+        };
+
+        function addStar(key) {
+            if (!solvedState[key]) {
+                solvedState[key] = true;
+                const total = Object.values(solvedState).filter(Boolean).length;
+                document.getElementById('user-stars').innerText = total;
+                if (typeof confetti === 'function' && total % 3 === 0) {
+                    confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+                }
+            }
+        }
+
+        // --- 1. Warmup JS ---
+        let chocolateSelected = [true, true, false, false];
+
+        function toggleChoc(idx) {
+            chocolateSelected[idx] = !chocolateSelected[idx];
+            const el = document.getElementById(`choc-${idx}`);
+            if (chocolateSelected[idx]) {
+                el.className = "h-8 bg-amber-600 rounded cursor-pointer transition hover:opacity-80 flex items-center justify-center text-xs text-amber-100 font-bold";
+            } else {
+                el.className = "h-8 bg-amber-900 rounded cursor-pointer transition hover:opacity-80 flex items-center justify-center text-xs text-amber-300 font-bold";
+            }
+            const count = chocolateSelected.filter(Boolean).length;
+            document.getElementById('w2-input').value = `${count}/4`;
+        }
+
+        function checkWarmup1() {
+            const numVal = document.getElementById('w1-num').value;
+            const denVal = document.getElementById('w1-den').value;
+            const fb = document.getElementById('w1-feedback');
+            fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (numVal === 'numerator' && denVal === 'parts') {
+                fb.classList.add('bg-emerald-100', 'text-emerald-800');
+                fb.innerHTML = '<i class="fa-solid fa-circle-check"></i> <strong>Correct!</strong> 3 is the numerator (parts taken) and 8 is the denominator (total parts).';
+                document.getElementById('q1-status').innerHTML = '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Solved</span>';
+                addStar('w1');
+            } else {
+                fb.classList.add('bg-rose-100', 'text-rose-800');
+                fb.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Try Again:</strong> The top number is the <em>numerator</em> and the bottom number is the <em>total equal parts (denominator)</em>.';
+            }
+        }
+
+        function checkWarmup2() {
+            const val = document.getElementById('w2-input').value.trim().replace(/\s+/g, '');
+            const fb = document.getElementById('w2-feedback');
+            fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (val === '2/4' || val === '1/2') {
+                fb.classList.add('bg-emerald-100', 'text-emerald-800');
+                fb.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>Spot on!</strong> Eating 2 of 4 pieces equals ${formatFrac(2,4)} (which is equivalent to ${formatFrac(1,2)})!`;
+                document.getElementById('q2-status').innerHTML = '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Solved</span>';
+                addStar('w2');
+            } else {
+                fb.classList.add('bg-rose-100', 'text-rose-800');
+                fb.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Try Again:</strong> Enter the fraction as 2/4 or simplified 1/2.';
+            }
+        }
+
+        function checkWarmup3() {
+            const val = parseInt(document.getElementById('w3-input').value);
+            const fb = document.getElementById('w3-feedback');
+            fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (val === 4) {
+                fb.classList.add('bg-emerald-100', 'text-emerald-800');
+                fb.innerHTML = '<i class="fa-solid fa-circle-check"></i> <strong>Awesome!</strong> 12 ÷ 3 = 4 apples.';
+                document.getElementById('q3-status').innerHTML = '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Solved</span>';
+                addStar('w3');
+            } else {
+                fb.classList.add('bg-rose-100', 'text-rose-800');
+                fb.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Try Again:</strong> Divide 12 apples into 3 equal groups. How many in 1 group?';
+            }
+        }
+
+        let q4Selection = null;
+        function selectQ4(val) {
+            q4Selection = val;
+            document.getElementById('btn-q4-half').classList.toggle('border-sky-500', val === '1/2');
+            document.getElementById('btn-q4-quarter').classList.toggle('border-sky-500', val === '1/4');
+        }
+
+        function checkWarmup4() {
+            const fb = document.getElementById('w4-feedback');
+            fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (q4Selection === '1/2') {
+                fb.classList.add('bg-emerald-100', 'text-emerald-800');
+                fb.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>Correct!</strong> ${formatFrac(1,2)} of a whole is larger than ${formatFrac(1,4)} (fewer, larger pieces!).`;
+                document.getElementById('q4-status').innerHTML = '<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Solved</span>';
+                addStar('w4');
+            } else {
+                fb.classList.add('bg-rose-100', 'text-rose-800');
+                fb.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <strong>Try Again:</strong> Remember, dividing a pizza into 2 pieces makes bigger slices than dividing into 4!';
+            }
+        }
+
+        function resetWarmup() {
+            document.getElementById('w1-num').value = '';
+            document.getElementById('w1-den').value = '';
+            document.getElementById('w1-feedback').classList.add('hidden');
+            document.getElementById('w2-input').value = '';
+            document.getElementById('w2-feedback').classList.add('hidden');
+            document.getElementById('w3-input').value = '';
+            document.getElementById('w3-feedback').classList.add('hidden');
+            document.getElementById('w4-feedback').classList.add('hidden');
+            q4Selection = null;
+            document.getElementById('btn-q4-half').classList.remove('border-sky-500');
+            document.getElementById('btn-q4-quarter').classList.remove('border-sky-500');
+        }
+
+        // --- 2. Interactive Pizza Simulator JS ---
+        function updatePizzaSimulator() {
+            const totalSlices = parseInt(document.getElementById('pizza-slices-slider').value);
+            const eatenSlider = document.getElementById('pizza-eaten-slider');
+            
+            eatenSlider.max = totalSlices;
+            if (parseInt(eatenSlider.value) > totalSlices) {
+                eatenSlider.value = totalSlices;
+            }
+            const eatenSlices = parseInt(eatenSlider.value);
+
+            document.getElementById('slices-count-label').innerText = totalSlices;
+            document.getElementById('eaten-count-label').innerText = eatenSlices;
+            document.getElementById('custom-fraction-text').innerHTML = formatFrac(eatenSlices, totalSlices);
+            
+            const pct = Math.round((eatenSlices / totalSlices) * 100);
+            document.getElementById('custom-percent-text').innerText = `${pct}%`;
+
+            renderPizzaSvg(totalSlices, eatenSlices);
+
+            const verdict = document.getElementById('pizza-verdict');
+            if (eatenSlices / totalSlices === 0.5) {
+                verdict.className = "p-3 rounded-xl text-center text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200";
+                verdict.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> PERFECT EQUIVALENCE! ${formatFrac(eatenSlices, totalSlices)} = ${formatFrac(1,2)}. You and Maya ate the EXACT same amount!`;
+            } else if (eatenSlices / totalSlices > 0.5) {
+                verdict.className = "p-3 rounded-xl text-center text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200";
+                verdict.innerHTML = `<i class="fa-solid fa-circle-info text-amber-600"></i> You ate MORE pizza than Maya! (${formatFrac(eatenSlices, totalSlices)} > ${formatFrac(1,2)})`;
+            } else {
+                verdict.className = "p-3 rounded-xl text-center text-xs font-bold bg-sky-100 text-sky-800 border border-sky-200";
+                verdict.innerHTML = `<i class="fa-solid fa-circle-info text-sky-600"></i> You ate LESS pizza than Maya! (${formatFrac(eatenSlices, totalSlices)} < ${formatFrac(1,2)})`;
+            }
+        }
+
+        function renderPizzaSvg(n, eaten) {
+            const svg = document.getElementById('custom-pizza-svg');
+            const cx = 50, cy = 50, r = 48;
+            let pathsHtml = '';
+
+            for (let i = 0; i < n; i++) {
+                const startAngle = (i * 360 / n) * (Math.PI / 180);
+                const endAngle = ((i + 1) * 360 / n) * (Math.PI / 180);
+
+                const x1 = cx + r * Math.sin(startAngle);
+                const y1 = cy - r * Math.cos(startAngle);
+                const x2 = cx + r * Math.sin(endAngle);
+                const y2 = cy - r * Math.cos(endAngle);
+
+                const largeArc = (endAngle - startAngle) > Math.PI ? 1 : 0;
+                const fill = i < eaten ? '#38bdf8' : '#fef3c7'; // Sky blue for eaten, light cheese for un-eaten
+
+                pathsHtml += `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2} Z" fill="${fill}" stroke="#ffffff" stroke-width="2" class="slice-path"/>`;
+            }
+
+            pathsHtml += `<circle cx="50" cy="50" r="48" fill="none" stroke="#0284c7" stroke-width="4"/>`;
+            svg.innerHTML = pathsHtml;
+        }
+
+        // --- 3. Workbench Tools JS ---
+        function switchStudioMode(mode) {
+            const multPanel = document.getElementById('studio-multiplier');
+            const simpPanel = document.getElementById('studio-simplifier');
+            const btnMult = document.getElementById('tab-btn-mult');
+            const btnSimp = document.getElementById('tab-btn-simp');
+
+            if (mode === 'multiply') {
+                multPanel.classList.remove('hidden');
+                simpPanel.classList.add('hidden');
+                btnMult.className = "px-4 py-2 rounded-xl text-xs font-bold bg-sky-500 text-white transition";
+                btnSimp.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-slate-300 transition";
+            } else {
+                multPanel.classList.add('hidden');
+                simpPanel.classList.remove('hidden');
+                btnSimp.className = "px-4 py-2 rounded-xl text-xs font-bold bg-teal-500 text-white transition";
+                btnMult.className = "px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-slate-300 transition";
+                runSimplifier();
+            }
+        }
+
+        function runMultiplier() {
+            const num = parseInt(document.getElementById('mult-num').value) || 1;
+            const den = parseInt(document.getElementById('mult-den').value) || 1;
+            const factor = parseInt(document.getElementById('mult-factor').value);
+
+            document.getElementById('mult-factor-val').innerText = factor;
+
+            const resNum = num * factor;
+            const resDen = den * factor;
+
+            document.getElementById('mult-result').innerHTML = formatFrac(resNum, resDen);
+            document.getElementById('mult-strip1-label').innerHTML = formatFrac(num, den);
+            document.getElementById('mult-strip2-label').innerHTML = formatFrac(resNum, resDen);
+
+            // Render Strips
+            const strip1 = document.getElementById('mult-strip-1');
+            const strip2 = document.getElementById('mult-strip-2');
+
+            let html1 = '';
+            for (let i = 0; i < den; i++) {
+                const isShaded = i < num;
+                html1 += `<div style="width: ${100/den}%" class="h-full border-r border-slate-900 ${isShaded ? 'bg-sky-500' : 'bg-slate-700'}"></div>`;
+            }
+            strip1.innerHTML = html1;
+
+            let html2 = '';
+            for (let i = 0; i < resDen; i++) {
+                const isShaded = i < resNum;
+                html2 += `<div style="width: ${100/resDen}%" class="h-full border-r border-slate-900 ${isShaded ? 'bg-sky-400' : 'bg-slate-700'}"></div>`;
+            }
+            strip2.innerHTML = html2;
+        }
+
+        function runSimplifier() {
+            const num = parseInt(document.getElementById('simp-num').value) || 1;
+            const den = parseInt(document.getElementById('simp-den').value) || 1;
+
+            function findHCF(a, b) {
+                return b === 0 ? a : findHCF(b, a % b);
+            }
+
+            const hcf = findHCF(num, den);
+            const simpNum = num / hcf;
+            const simpDen = den / hcf;
+
+            document.getElementById('simp-result').innerHTML = formatFrac(simpNum, simpDen);
+
+            // Factors list
+            const numFactors = getFactors(num);
+            const denFactors = getFactors(den);
+
+            const stepsBox = document.getElementById('simp-steps-box');
+            stepsBox.innerHTML = `
+                <p><span class="text-teal-400">Step 1:</span> Factors of ${num}: [${numFactors.join(', ')}]</p>
+                <p><span class="text-teal-400">Step 2:</span> Factors of ${den}: [${denFactors.join(', ')}]</p>
+                <p><span class="text-amber-300 font-bold">Highest Common Factor (HCF): ${hcf}</span></p>
+                <p class="flex items-center gap-1.5 flex-wrap"><span class="text-teal-400">Step 3:</span> Divide Numerator & Denominator by ${hcf}: 
+                    <span class="frac"><span class="top">${num} ÷ ${hcf}</span><span class="bottom">${den} ÷ ${hcf}</span></span> = 
+                    <strong class="text-teal-300 text-sm font-mono">${formatFrac(simpNum, simpDen)}</strong>
+                </p>
+            `;
+        }
+
+        function getFactors(n) {
+            const factors = [];
+            for (let i = 1; i <= n; i++) {
+                if (n % i === 0) factors.push(i);
+            }
+            return factors;
+        }
+
+        // --- 4. Guided Practice Tasks JS ---
+        function checkTask1Item(inputId, correctAns, fbId) {
+            const userVal = parseInt(document.getElementById(inputId).value);
+            const fb = document.getElementById(fbId);
+            fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (userVal === correctAns) {
+                fb.classList.add('bg-emerald-100', 'text-emerald-800');
+                fb.innerHTML = '<i class="fa-solid fa-check"></i> Correct!';
+                addStar(inputId.replace('-', '_'));
+            } else {
+                fb.classList.add('bg-rose-100', 'text-rose-800');
+                fb.innerHTML = `<i class="fa-solid fa-xmark"></i> Answer is ${correctAns}`;
+            }
+        }
+
+        function checkSimplification(numId, denId, corrNum, corrDen, fbId) {
+            const userNum = parseInt(document.getElementById(numId).value);
+            const userDen = parseInt(document.getElementById(denId).value);
+            const fb = document.getElementById(fbId);
+            fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (userNum === corrNum && userDen === corrDen) {
+                fb.classList.add('bg-emerald-100', 'text-emerald-800');
+                fb.innerHTML = '<i class="fa-solid fa-check"></i> Correct!';
+                addStar(numId.replace('-', '_'));
+            } else {
+                fb.classList.add('bg-rose-100', 'text-rose-800');
+                fb.innerHTML = `<i class="fa-solid fa-xmark"></i> Simplest form is ${formatFrac(corrNum, corrDen)}`;
+            }
+        }
+
+        function checkTask3Inquiry() {
+            const radio = document.querySelector('input[name="garden-qa"]:checked');
+            const text = document.getElementById('garden-qb-text').value.trim();
+            const fb = document.getElementById('fb-t3-inquiry');
+            fb.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-amber-100', 'text-amber-800');
+
+            if (!radio || text.length < 5) {
+                fb.classList.add('bg-amber-100', 'text-amber-800');
+                fb.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Please select Question A answer and write your explanation for Question B!';
+                return;
+            }
+
+            fb.classList.add('bg-emerald-100', 'text-emerald-800');
+            fb.innerHTML = `
+                <p><strong><i class="fa-solid fa-circle-check"></i> Excellent Inquiry Response!</strong></p>
+                <p class="mt-1 flex items-center gap-1 flex-wrap">1. Yes! All groups cover 60% of their garden (${formatFrac(6,10)} = ${formatFrac(12,20)} = ${formatFrac(3,5)}).</p>
+                <p class="mt-0.5 flex items-center gap-1 flex-wrap">2. <strong>Group Gamma (${formatFrac(3,5)})</strong> expressed their garden fraction in its simplest form because 3 and 5 share no common factor other than 1!</p>
+            `;
+            if (typeof confetti === 'function') confetti();
+        }
+
+        function saveReflection() {
+            const text = document.getElementById('final-reflection').value.trim();
+            if (text.length > 0) {
+                if (typeof confetti === 'function') confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                const toast = document.createElement('div');
+                toast.className = "fixed bottom-5 right-5 bg-teal-600 text-white px-5 py-3 rounded-2xl shadow-xl font-bold text-xs flex items-center gap-2 z-50";
+                toast.innerHTML = `<i class="fa-solid fa-award text-lg"></i> Reflection saved! Module complete! 🎉`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            updatePizzaSimulator();
+            runMultiplier();
+        };
+    </script>
+</body>
+</html>
